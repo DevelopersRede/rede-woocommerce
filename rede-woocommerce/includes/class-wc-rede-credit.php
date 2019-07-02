@@ -321,14 +321,14 @@ class WC_Rede_Credit extends WC_Rede_Abstract
                 $label = sprintf('R$ %.02f à vista', $order_total);
             }
 
+            if (($order_total / $i) < $min_value) {
+                break;
+            }
+
             $installments[] = array(
                 'num' => $i,
                 'label' => $label
             );
-
-            if (($order_total / $i) < $min_value) {
-                break;
-            }
         }
 
         if (count($installments) == 0) {
