@@ -408,7 +408,7 @@ class WC_Rede_Credit extends WC_Rede_Abstract
                 }
 
                 update_post_meta($order_id, '_wc_rede_transaction_holder', $transaction->getCardHolderName());
-                update_post_meta($order_id, '_wc_rede_transaction_expiration', sprintf('%02d/%04d', $expiration[0], $expiration[1]));
+                update_post_meta($order_id, '_wc_rede_transaction_expiration', sprintf('%02d/%02d', $expiration[0], $expiration[1]));
 
                 update_post_meta($order_id, '_wc_rede_transaction_holder', $transaction->getCardHolderName());
 

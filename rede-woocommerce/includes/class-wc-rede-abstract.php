@@ -186,8 +186,8 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway
                 throw new Exception('Por favor, informe a data de expiração do cartão');
             }
 
-            if (strtotime(preg_replace('/(\d{2})\s*\/\s*(\d{4})/', '$2-$1-01',
-                    $posted[$this->id . '_expiry'])) < strtotime(date('Y-m') . '-01')) {
+            if (strtotime(preg_replace('/(\d{2})\s*\/\s*(\d{2})/', '$2-$1-01',
+                    $posted[$this->id . '_expiry'])) < strtotime(date('y-m') . '-01')) {
                 throw new Exception('A data de expiração do cartão deve ser futura');
             }
 
