@@ -1,9 +1,10 @@
 <?php
 /**
  * Plugin Name: Rede WooCommerce
+ * Plugin URI:        https://github.com/DevelopersRede/woocommerce
  * Description: Rede API integration for WooCommerce
  * Author:      Rede
- * Version:     1.0.0
+ * Version:     1.2.2
  * Text Domain: rede-woocommerce
  *
  * @package WC_Rede
@@ -17,7 +18,7 @@ if (!class_exists('WC_Rede')) :
     class WC_Rede
     {
 
-        const VERSION = '1.0.0';
+        const VERSION = '1.2.2';
 
         protected static $instance = null;
 
