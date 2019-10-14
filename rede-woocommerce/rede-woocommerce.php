@@ -3,7 +3,7 @@
  * Plugin Name: Rede WooCommerce
  * Description: Rede API integration for WooCommerce
  * Author:      Rede
- * Version:     1.0.0
+ * Version:     1.3.0
  * Text Domain: rede-woocommerce
  *
  * @package WC_Rede
