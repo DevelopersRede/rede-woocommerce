@@ -17,7 +17,7 @@ if (!class_exists('WC_Rede')) :
     class WC_Rede
     {
 
-        const VERSION = '1.0.0';
+        const VERSION = '1.3.0';
 
         protected static $instance = null;
 
