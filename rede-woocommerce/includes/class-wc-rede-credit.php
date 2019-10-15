@@ -96,78 +96,78 @@ class WC_Rede_Credit extends WC_Rede_Abstract
             <tbody>
             <tr>
                 <td>Ambiente</td>
-                <td><?= $order->get_meta('_wc_rede_transaction_environment'); ?></td>
+                <td><?php echo $order->get_meta('_wc_rede_transaction_environment'); ?></td>
             </tr>
 
             <tr>
                 <td>Código de Retorno</td>
-                <td><?= $order->get_meta('_wc_rede_transaction_return_code'); ?></td>
+                <td><?php echo $order->get_meta('_wc_rede_transaction_return_code'); ?></td>
             </tr>
 
             <tr>
                 <td>Mensagem de Retorno</td>
-                <td><?= $order->get_meta('_wc_rede_transaction_return_message'); ?></td>
+                <td><?php echo $order->get_meta('_wc_rede_transaction_return_message'); ?></td>
             </tr>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_id'))) { ?>
                 <tr>
                     <td>ID Transação</td>
-                    <td><?= $order->get_meta('_wc_rede_transaction_id'); ?></td>
+                    <td><?php echo $order->get_meta('_wc_rede_transaction_id'); ?></td>
                 </tr>
             <?php } ?>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_refund_id'))) { ?>
                 <tr>
                     <td>ID Reembolso</td>
-                    <td><?= $order->get_meta('_wc_rede_transaction_refund_id'); ?></td>
+                    <td><?php echo $order->get_meta('_wc_rede_transaction_refund_id'); ?></td>
                 </tr>
             <?php } ?>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_cancel_id'))) { ?>
                 <tr>
                     <td>Id Cancelamento</td>
-                    <td><?= $order->get_meta('_wc_rede_transaction_cancel_id'); ?></td>
+                    <td><?php echo $order->get_meta('_wc_rede_transaction_cancel_id'); ?></td>
                 </tr>
             <?php } ?>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_nsu'))) { ?>
                 <tr>
                     <td>Nsu</td>
-                    <td><?= $order->get_meta('_wc_rede_transaction_nsu'); ?></td>
+                    <td><?php echo $order->get_meta('_wc_rede_transaction_nsu'); ?></td>
                 </tr>
             <?php } ?>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_authorization_code'))) { ?>
                 <tr>
                     <td>Código de autorização</td>
-                    <td><?= $order->get_meta('_wc_rede_transaction_authorization_code'); ?></td>
+                    <td><?php echo $order->get_meta('_wc_rede_transaction_authorization_code'); ?></td>
                 </tr>
             <?php } ?>
 
             <tr>
                 <td>Bin</td>
-                <td><?= $order->get_meta('_wc_rede_transaction_bin'); ?></td>
+                <td><?php echo $order->get_meta('_wc_rede_transaction_bin'); ?></td>
             </tr>
 
             <tr>
                 <td>Last 4</td>
-                <td><?= $order->get_meta('_wc_rede_transaction_last4'); ?></td>
+                <td><?php echo $order->get_meta('_wc_rede_transaction_last4'); ?></td>
             </tr>
 
             <tr>
                 <td>Parcelas</td>
-                <td><?= $order->get_meta('_wc_rede_transaction_installments'); ?></td>
+                <td><?php echo $order->get_meta('_wc_rede_transaction_installments'); ?></td>
             </tr>
 
 
             <tr>
                 <td>Portador do cartão</td>
-                <td><?= $order->get_meta('_wc_rede_transaction_holder'); ?></td>
+                <td><?php echo $order->get_meta('_wc_rede_transaction_holder'); ?></td>
             </tr>
 
             <tr>
                 <td>Expiração do cartão</td>
-                <td><?= $order->get_meta('_wc_rede_transaction_expiration'); ?></td>
+                <td><?php echo $order->get_meta('_wc_rede_transaction_expiration'); ?></td>
             </tr>
             </tbody>
         </table>
@@ -379,7 +379,7 @@ class WC_Rede_Credit extends WC_Rede_Abstract
             $card_data = array(
                 'card_number' => preg_replace('/[^\d]/', '', $_POST['rede_credit_number']),
                 'card_expiration_month' => $expiration[0],
-                'card_expiration_year' => $expiration[1],
+                'card_expiration_year' => $this->normalize_expiration_year( $expiration[1] ),
                 'card_cvv' => $_POST['rede_credit_cvc'],
                 'card_holder' => $_POST['rede_credit_holder_name']
             );

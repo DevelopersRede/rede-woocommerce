@@ -172,6 +172,7 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway
 
     protected function validate_card_fields($posted)
     {
+
         try {
             if (!isset($posted[$this->id . '_holder_name']) || '' === $posted[$this->id . '_holder_name']) {
                 throw new Exception('Por favor informe o nome do titular do cartão');
@@ -186,9 +187,15 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway
                 throw new Exception('Por favor, informe a data de expiração do cartão');
             }
 
-            if (strtotime(preg_replace('/(\d{2})\s*\/\s*(\d{4})/', '$2-$1-01',
-                    $posted[$this->id . '_expiry'])) < strtotime(date('Y-m') . '-01')) {
-                throw new Exception('A data de expiração do cartão deve ser futura');
+            //if user filled expiry date with 3 digits,
+            // throw an exception and let him/her/they know.
+            if ( isset($posted[$this->id . '_expiry'][2]) && !isset($posted[$this->id . '_expiry'][3])) {
+                throw new Exception('A data de expiração deve conter 2 ou 4 dígitos');
+            }
+
+           if (strtotime(preg_replace('/(\d{2})\s*\/\s*(\d{4})/', '$2-$1-01',
+                    $this->normalize_expiration_date( $posted[$this->id . '_expiry'] ) ) ) < strtotime(date('Y-m') . '-01')) {
+                throw new Exception('A data de expiração do cartão deve ser futura.');
             }
 
             if (!isset($posted[$this->id . '_cvc']) || '' === $posted[$this->id . '_cvc']) {
@@ -205,6 +212,41 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway
         }
 
         return true;
+    }
+
+    /**
+     * Normalize expiry date.
+     *
+     * Normalize expiry date by adding the '20' when the year has only 2 digits.
+     *
+     * @param string $date
+     * @return string $date
+     */
+    protected function normalize_expiration_date($date) {
+
+        // Check the length of the string. This way of checking length is faster.
+        // see https://coderwall.com/p/qgeuna/php-string-length-the-right-way
+        if ( !isset($date[7])) {
+            $date = str_replace ( '/ ', '/ 20', $date);
+        }
+
+        return $date;
+    }
+
+    /**
+     * Normalize expiry year.
+     *
+     * Normalize expiry year by adding the '20' when the year has only 2 digits.
+     *
+     * @param string $year
+     * @return string $year
+     */
+    protected function normalize_expiration_year($year) {
+        if ( !isset($year[3])) {
+            $year = '20' . $year;
+        }
+
+        return $year;
     }
 
     public function add_error($message)

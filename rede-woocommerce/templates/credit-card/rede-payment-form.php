@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 
     <?php if (is_array($installments) && count($installments) > 1) : ?>
         <p class="form-row form-row-wide">
-            <label for="installments">Parcelas <?= count($installments) ?><span
+            <label for="installments">Parcelas <?php echo count($installments) ?><span
                         class="required">*</span></label> <select id="installments"
                                                                   name="rede_credit_installments">
                 <?php
