@@ -91,83 +91,83 @@ class WC_Rede_Credit extends WC_Rede_Abstract
     public function display_meta($order)
     {
         ?>
-        <h3><?php _e( 'Rede', 'rede-woocommerce' )?></h3>
+        <h3>Rede</h3>
         <table>
             <tbody>
             <tr>
-                <td><?php _e( 'Ambiente', 'rede-woocommerce' )?></td>
-                <td><?php echo $order->get_meta('_wc_rede_transaction_environment'); ?></td>
+                <td>Ambiente</td>
+                <td><?= $order->get_meta('_wc_rede_transaction_environment'); ?></td>
             </tr>
 
             <tr>
-                <td><?php _e( 'Código de retorno', 'rede-woocommerce' )?></td>
-                <td><?php echo $order->get_meta('_wc_rede_transaction_return_code'); ?></td>
+                <td>Código de Retorno</td>
+                <td><?= $order->get_meta('_wc_rede_transaction_return_code'); ?></td>
             </tr>
 
             <tr>
-                <td><?php _e( 'Mensagem de retorno', 'rede-woocommerce' )?></td>
-                <td><?php echo $order->get_meta('_wc_rede_transaction_return_message'); ?></td>
+                <td>Mensagem de Retorno</td>
+                <td><?= $order->get_meta('_wc_rede_transaction_return_message'); ?></td>
             </tr>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_id'))) { ?>
                 <tr>
-                    <td><?php _e( 'ID Transação', 'rede-woocommerce' )?></td>
-                    <td><?php echo $order->get_meta('_wc_rede_transaction_id'); ?></td>
+                    <td>ID Transação</td>
+                    <td><?= $order->get_meta('_wc_rede_transaction_id'); ?></td>
                 </tr>
             <?php } ?>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_refund_id'))) { ?>
                 <tr>
-                    <td><?php _e( 'ID Reembolso', 'rede-woocommerce' )?></td>
-                    <td><?php echo $order->get_meta('_wc_rede_transaction_refund_id'); ?></td>
+                    <td>ID Reembolso</td>
+                    <td><?= $order->get_meta('_wc_rede_transaction_refund_id'); ?></td>
                 </tr>
             <?php } ?>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_cancel_id'))) { ?>
                 <tr>
-                    <td><?php _e( 'Id Cancelamento', 'rede-woocommerce' )?></td>
-                    <td><?php echo $order->get_meta('_wc_rede_transaction_cancel_id'); ?></td>
+                    <td>Id Cancelamento</td>
+                    <td><?= $order->get_meta('_wc_rede_transaction_cancel_id'); ?></td>
                 </tr>
             <?php } ?>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_nsu'))) { ?>
                 <tr>
-                    <td><?php _e( 'Nsu', 'rede-woocommerce' )?></td>
-                    <td><?php echo $order->get_meta('_wc_rede_transaction_nsu'); ?></td>
+                    <td>Nsu</td>
+                    <td><?= $order->get_meta('_wc_rede_transaction_nsu'); ?></td>
                 </tr>
             <?php } ?>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_authorization_code'))) { ?>
                 <tr>
-                    <td><?php _e( 'Código de autorização', 'rede-woocommerce' )?></td>
-                    <td><?php echo $order->get_meta('_wc_rede_transaction_authorization_code'); ?></td>
+                    <td>Código de autorização</td>
+                    <td><?= $order->get_meta('_wc_rede_transaction_authorization_code'); ?></td>
                 </tr>
             <?php } ?>
 
             <tr>
-                <td><?php _e( 'Bin', 'rede-woocommerce' )?></td>
-                <td><?php echo $order->get_meta('_wc_rede_transaction_bin'); ?></td>
+                <td>Bin</td>
+                <td><?= $order->get_meta('_wc_rede_transaction_bin'); ?></td>
             </tr>
 
             <tr>
-                <td><?php _e( 'Last 4', 'rede-woocommerce' )?></td>
-                <td><?php echo $order->get_meta('_wc_rede_transaction_last4'); ?></td>
+                <td>Last 4</td>
+                <td><?= $order->get_meta('_wc_rede_transaction_last4'); ?></td>
             </tr>
 
             <tr>
-                <td><?php _e( 'Parcelas', 'rede-woocommerce' )?></td>
-                <td><?php echo $order->get_meta('_wc_rede_transaction_installments'); ?></td>
+                <td>Parcelas</td>
+                <td><?= $order->get_meta('_wc_rede_transaction_installments'); ?></td>
             </tr>
 
 
             <tr>
-                <td><?php _e( 'Portador do cartão', 'rede-woocommerce' )?></td>
-                <td><?php echo $order->get_meta('_wc_rede_transaction_holder'); ?></td>
+                <td>Portador do cartão</td>
+                <td><?= $order->get_meta('_wc_rede_transaction_holder'); ?></td>
             </tr>
 
             <tr>
-                <td><?php _e( 'Expiração do cartão', 'rede-woocommerce' )?></td>
-                <td><?php echo $order->get_meta('_wc_rede_transaction_expiration'); ?></td>
+                <td>Expiração do cartão</td>
+                <td><?= $order->get_meta('_wc_rede_transaction_expiration'); ?></td>
             </tr>
             </tbody>
         </table>
@@ -315,7 +315,13 @@ class WC_Rede_Credit extends WC_Rede_Abstract
         $max_parcels = $this->max_parcels_number;
 
         for ($i = 1; $i <= $max_parcels; ++$i) {
-            $label = sprintf('%dx de R$ %.02f', $i, $order_total / $i);
+            if (($order_total / $i) >= $min_value) {
+                $label = sprintf('%dx de R$ %.02f', $i, $order_total / $i);
+            }
+
+            if (($order_total / $i) < $min_value) {
+                break;
+            }
 
             if ($i == 1) {
                 $label = sprintf('R$ %.02f à vista', $order_total);
@@ -325,10 +331,7 @@ class WC_Rede_Credit extends WC_Rede_Abstract
                 'num' => $i,
                 'label' => $label
             );
-
-            if (($order_total / $i) < $min_value) {
-                break;
-            }
+            
         }
 
         if (count($installments) == 0) {
