@@ -44,7 +44,7 @@ if (!defined('ABSPATH')) {
                                                              class="input-text wc-credit-card-form-card-expiry"
                                                              type="tel"
                                                              autocomplete="off"
-                                                             placeholder="MM / AAAA"
+                                                             placeholder="MM / ANO"
                                                              style="font-size: 1.5em; padding: 8px;"/>
     </p>
     <p class="form-row form-row-last">
