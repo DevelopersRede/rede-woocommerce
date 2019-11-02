@@ -9,8 +9,8 @@ class WC_Rede_Credit extends WC_Rede_Abstract
     {
         $this->id = 'rede_credit';
         $this->has_fields = true;
-        $this->method_title = 'Pague com a Rede';
-        $this->method_description = 'Habilita e configura pagamentos com a Rede';
+        $this->method_title = __( 'Pay with the Rede', 'rede-woocommerce' );
+        $this->method_description = __( 'Enables and configures payments with Rede', 'rede-woocommerce' );
         $this->supports = array(
             'products',
             'refunds'
@@ -91,82 +91,82 @@ class WC_Rede_Credit extends WC_Rede_Abstract
     public function display_meta($order)
     {
         ?>
-        <h3>Rede</h3>
+        <h3><?php _e( 'Rede','rede-woocommerce' ); ?></h3>
         <table>
             <tbody>
             <tr>
-                <td>Ambiente</td>
+                <td><?php _e( 'Environment','rede-woocommerce' ); ?></td>
                 <td><?= $order->get_meta('_wc_rede_transaction_environment'); ?></td>
             </tr>
 
             <tr>
-                <td>Código de Retorno</td>
+                <td><?php _e( 'Return Code','rede-woocommerce' ); ?></td>
                 <td><?= $order->get_meta('_wc_rede_transaction_return_code'); ?></td>
             </tr>
 
             <tr>
-                <td>Mensagem de Retorno</td>
+                <td><?php _e( 'Return Message','rede-woocommerce' ); ?></td>
                 <td><?= $order->get_meta('_wc_rede_transaction_return_message'); ?></td>
             </tr>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_id'))) { ?>
                 <tr>
-                    <td>ID Transação</td>
+                    <td><?php _e( 'Transaction ID','rede-woocommerce' ); ?></td>
                     <td><?= $order->get_meta('_wc_rede_transaction_id'); ?></td>
                 </tr>
             <?php } ?>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_refund_id'))) { ?>
                 <tr>
-                    <td>ID Reembolso</td>
+                    <td><?php _e( 'Refund ID','rede-woocommerce' ); ?></td>
                     <td><?= $order->get_meta('_wc_rede_transaction_refund_id'); ?></td>
                 </tr>
             <?php } ?>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_cancel_id'))) { ?>
                 <tr>
-                    <td>Id Cancelamento</td>
+                    <td><?php _e( 'Cancellation ID','rede-woocommerce' ); ?></td>
                     <td><?= $order->get_meta('_wc_rede_transaction_cancel_id'); ?></td>
                 </tr>
             <?php } ?>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_nsu'))) { ?>
                 <tr>
-                    <td>Nsu</td>
+                    <td><?php _e( 'Nsu','rede-woocommerce' ); ?></td>
                     <td><?= $order->get_meta('_wc_rede_transaction_nsu'); ?></td>
                 </tr>
             <?php } ?>
 
             <?php if (!empty($order->get_meta('_wc_rede_transaction_authorization_code'))) { ?>
                 <tr>
-                    <td>Código de autorização</td>
+                    <td><?php _e( 'Authorization Code','rede-woocommerce' ); ?></td>
                     <td><?= $order->get_meta('_wc_rede_transaction_authorization_code'); ?></td>
                 </tr>
             <?php } ?>
 
             <tr>
-                <td>Bin</td>
+                <td><?php _e( 'Bin','rede-woocommerce' ); ?></td>
                 <td><?= $order->get_meta('_wc_rede_transaction_bin'); ?></td>
             </tr>
 
             <tr>
-                <td>Last 4</td>
+                <td><?php _e( 'Last 4','rede-woocommerce' ); ?></td>
                 <td><?= $order->get_meta('_wc_rede_transaction_last4'); ?></td>
             </tr>
 
             <tr>
-                <td>Parcelas</td>
+                <td><?php _e( 'Installments','rede-woocommerce' ); ?></td>
                 <td><?= $order->get_meta('_wc_rede_transaction_installments'); ?></td>
             </tr>
 
 
             <tr>
-                <td>Portador do cartão</td>
+                <td><?php _e( 'Cardholder','rede-woocommerce' ); ?></td>
                 <td><?= $order->get_meta('_wc_rede_transaction_holder'); ?></td>
             </tr>
 
             <tr>
-                <td>Expiração do cartão</td>
+                <td><?php _e( 'Card Expiration','rede-woocommerce' ); ?></td>
                 <td><?= $order->get_meta('_wc_rede_transaction_expiration'); ?></td>
             </tr>
             </tbody>
@@ -179,72 +179,72 @@ class WC_Rede_Credit extends WC_Rede_Abstract
     {
         $this->form_fields = array(
             'enabled' => array(
-                'title' => 'Habilita/Desabilita',
+                'title' => __( 'Enable/Disable', 'rede-woocommerce' ),
                 'type' => 'checkbox',
-                'label' => 'Habilita pagamento com a Rede',
+                'label' => __( 'Enables payment with Rede', 'rede-woocommerce' ),
                 'default' => 'yes'
             ),
             'title' => array(
-                'title' => 'Título',
+                'title' => __( 'Title', 'rede-woocommerce' ),
                 'type' => 'text',
-                'default' => 'Pague com a Rede'
+                'default' => __( 'Pay with Rede', 'rede-woocommerce' )
             ),
 
             'rede' => array(
-                'title' => 'Configuração geral',
+                'title' => __( 'General configuration', 'rede-woocommerce' ),
                 'type' => 'title'
             ),
             'environment' => array(
-                'title' => 'Ambiente',
+                'title' => __( 'Environment', 'rede-woocommerce' ),
                 'type' => 'select',
-                'description' => 'Escolha o ambiente',
+                'description' => __( 'Choose the environment', 'rede-woocommerce' ),
                 'desc_tip' => true,
                 'class' => 'wc-enhanced-select',
-                'default' => 'test',
+                'default' => __( 'test', 'rede-woocommerce' ),
                 'options' => array(
-                    'test' => 'Testes',
-                    'production' => 'Produção'
+                    'test' => __( 'Tests', 'rede-woocommerce' ),
+                    'production' => __( 'Production', 'rede-woocommerce' )
                 )
             ),
             'pv' => array(
-                'title' => 'PV',
+                'title' => __( 'PV', 'rede-woocommerce' ),
                 'type' => 'text',
                 'default' => ''
             ),
             'token' => array(
-                'title' => 'Token',
+                'title' => __( 'Token', 'rede-woocommerce' ),
                 'type' => 'text',
                 'default' => ''
             ),
 
             'soft_descriptor' => array(
-                'title' => 'Soft Descriptor',
+                'title' => __( 'Soft Descriptor', 'rede-woocommerce' ),
                 'type' => 'text',
                 'default' => ''
             ),
 
             'credit_options' => array(
-                'title' => 'Configuracões de cartão de crédito',
+                'title' => __( 'Credit Card Settings', 'rede-woocommerce' ),
                 'type' => 'title'
             ),
 
             'auto_capture' => array(
-                'title' => 'Autorização e captura',
+                'title' => __( 'Authorization and Capture', 'rede-woocommerce' ),
                 'type' => 'select',
                 'class' => 'wc-enhanced-select',
                 'default' => '2',
                 'options' => array(
-                    '1' => 'Autorize e capture automaticamente',
-                    '0' => 'Apenas autorize'
+                    '1' => __( 'Authorize and capture automatically', 'rede-woocommerce' ),
+                    '0' => __( 'Just authorize', 'rede-woocommerce' ),
                 )
             ),
             'min_parcels_value' => array(
-                'title' => 'Valor da menor parcela',
+                'title' => __( 'Value of the smallest installment', 'rede-woocommerce' ),
                 'type' => 'text',
                 'default' => '0'
             ),
             'max_parcels_number' => array(
-                'title' => 'Máximo de parcelas',
+                'title' => __( 'Max installments', 'rede-woocommerce' ),
                 'type' => 'select',
                 'class' => 'wc-enhanced-select',
                 'default' => '12',
@@ -265,30 +265,30 @@ class WC_Rede_Credit extends WC_Rede_Abstract
             ),
 
             'partners' => array(
-                'title' => 'Configuracões para parceiros',
+                'title' => __( 'Partner Settings', 'rede-woocommerce' ),
                 'type' => 'title'
             ),
             'module' => array(
-                'title' => 'ID Módulo',
+                'title' => __( 'Module ID', 'rede-woocommerce' ),
                 'type' => 'text',
                 'default' => ''
             ),
             'gateway' => array(
-                'title' => 'ID Gateway',
+                'title' => __( 'Gateway ID', 'rede-woocommerce' ),
                 'type' => 'text',
                 'default' => ''
             ),
 
             'developers' => array(
-                'title' => 'Configuracões para desenvolvedores',
+                'title' => __( 'Developer Settings', 'rede-woocommerce' ),
                 'type' => 'title'
             ),
 
             'debug' => array(
-                'title' => 'Depuração',
+                'title' => __( 'Debug', 'rede-woocommerce' ),
                 'type' => 'checkbox',
-                'label' => 'Ativa logs de depuração',
-                'default' => 'no'
+                'label' => __( 'Enable debug logs', 'rede-woocommerce' ),
+                'default' => __( 'no', 'rede-woocommerce' )
             )
         );
     }
@@ -462,7 +462,7 @@ class WC_Rede_Credit extends WC_Rede_Abstract
                 update_post_meta($order_id, '_wc_rede_transaction_cancel_id', $transaction->getCancelId());
                 update_post_meta($order_id, '_wc_rede_transaction_canceled', true);
 
-                $order->add_order_note('Reembolsado: ' . wc_price($amount));
+                $order->add_order_note(_e( 'Refunded:', 'rede-woocommerce' ) . wc_price($amount));
             } catch (Exception $e) {
                 return new WP_Error('rede_refund_error', sanitize_text_field($e->getMessage()));
             }
@@ -491,7 +491,7 @@ class WC_Rede_Credit extends WC_Rede_Abstract
                 update_post_meta($order_id, '_wc_rede_transaction_nsu', $transaction->getNsu());
                 update_post_meta($order_id, '_wc_rede_captured', true);
 
-                $order->add_order_note('Capturado');
+                $order->add_order_note(_e( 'Captured', 'rede-woocommerce' ));
             } catch (Exception $e) {
                 return new WP_Error('rede_capture_error', sanitize_text_field($e->getMessage()));
             }

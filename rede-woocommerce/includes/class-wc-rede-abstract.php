@@ -46,12 +46,13 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway
             $installments = get_post_meta($order_id, '_wc_rede_transaction_installments', true);
             $last = array_pop($items);
             $items['payment_return'] = array(
-                'label' => 'Payment:',
-                'value' => sprintf('<strong>Order ID</strong>: %s<br /><strong>Installments</strong>: %s<br /><strong>Transaction Id</strong>: %s<br />',
+                'label' => __( 'Payment:', 'rede-woocommerce' ),
+                'value' => sprintf(__( '<strong>Order ID</strong>: %s<br /><strong>Installments</strong>: %s<br /><strong>Transaction Id</strong>: %s<br />', 'rede-woocommerce' ),
+                //'value' => sprintf('<strong>Order ID</strong>: %s<br /><strong>Installments</strong>: %s<br /><strong>Transaction Id</strong>: %s<br />',
                     $order_id, $installments, $tid)
             );
 
-            $items['payment_return']['value'] .= sprintf('<strong>Autorization Code</strong>: %s', $authorization_code);
+            $items['payment_return']['value'] .= sprintf(__( '<strong>Autorization Code</strong>: %s', 'rede-woocommerce' ), $authorization_code);
 
             $items[] = $last;
         }
@@ -109,7 +110,7 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway
     {
         $transaction = $this->api->do_transaction_consultation($tid);
 
-        $this->process_order_status($order, $transaction, 'verificação automática');
+        $this->process_order_status($order, $transaction, _e( 'automatic check', 'rede-woocommerce' ));
     }
 
     /**
@@ -127,12 +128,12 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway
             if ($transaction->getCapture()) {
                 $order->payment_complete();
             } else {
-                $order->update_status('on-hold');
+                $order->update_status(_e( 'on-hold', 'rede-woocommerce' ));
                 wc_reduce_stock_levels($order->get_id());
             }
         } else {
-            $order->update_status('failed', $status_note);
-            $order->update_status('cancelled', $status_note);
+            $order->update_status(_e( 'failed', 'rede-woocommerce' ), $status_note);
+            $order->update_status(_e( 'cancelled', 'rede-woocommerce' ), $status_note);
         }
 
         WC()->cart->empty_cart();
@@ -148,10 +149,10 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway
             $order_url = add_query_arg('order', $order_id, get_permalink(woocommerce_get_page_id('view_order')));
         }
 
-        if ($order->get_status() == 'on-hold' || $order->get_status() == 'processing' || $order->get_status() == 'completed') {
-            echo '<div class="woocommerce-message">Seu pedido já está sendo processado. Para mais informações, <a href="' . esc_url($order_url) . '" class="button" style="display: block !important; visibility: visible !important;">veja os detalhes do pedido</a><br /></div>';
+        if ($order->get_status() == __( 'on-hold', 'rede-woocommerce' ) || $order->get_status() == __( 'processing', 'rede-woocommerce' ) || $order->get_status() == __( 'completed', 'rede-woocommerce' )) {
+            echo '<div class="woocommerce-message">' . __( 'Your order is already being processed. For more information ', 'rede-woocommerce' ) . '<a href="' . esc_url($order_url) . '" class="button" style="display: block !important; visibility: visible !important;">' . __( 'see order details', 'rede-woocommerce' ) . '</a><br /></div>';
         } else {
-            echo '<div class="woocommerce-info">Para mais detalhes sobre seu pedido, acesse <a href="' . esc_url($order_url) . '">página de detalhes do pedido</a></div>';
+            echo '<div class="woocommerce-info">' . __( 'For more details on your order, please visit ', 'rede-woocommerce' ) . '<a href="' . esc_url($order_url) . '">' . __( 'order details page', 'rede-woocommerce' ) . '</a></div>';
         }
     }
 
@@ -164,7 +165,7 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway
         }
 
         if (array_sum(str_split($card_number_checksum)) % 10 !== 0) {
-            throw new Exception('Por favor, informe um número válido de cartão de crédito');
+            throw new Exception(_e( 'Please enter a valid credit card number', 'rede-woocommerce' ));
         }
 
         return true;
@@ -175,35 +176,35 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway
 
         try {
             if (!isset($posted[$this->id . '_holder_name']) || '' === $posted[$this->id . '_holder_name']) {
-                throw new Exception('Por favor informe o nome do titular do cartão');
+                throw new Exception(_e( 'Please enter cardholder name', 'rede-woocommerce' ));
             }
 
             if (preg_replace('/[^a-zA-Z\s]/', '',
                     $posted[$this->id . '_holder_name']) != $posted[$this->id . '_holder_name']) {
-                throw new Exception('O nome do titular do cartão só pode conter letras');
+                throw new Exception(_e( 'Cardholder name can only contain letters', 'rede-woocommerce' ));
             }
 
             if (!isset($posted[$this->id . '_expiry']) || '' === $posted[$this->id . '_expiry']) {
-                throw new Exception('Por favor, informe a data de expiração do cartão');
+                throw new Exception(_e( 'Please enter card expiration date', 'rede-woocommerce' ));
             }
 
             //if user filled expiry date with 3 digits,
             // throw an exception and let him/her/they know.
             if ( isset($posted[$this->id . '_expiry'][2]) && !isset($posted[$this->id . '_expiry'][3])) {
-                throw new Exception('A data de expiração deve conter 2 ou 4 dígitos');
+                throw new Exception(_e( 'Expiration date must contain 2 or 4 digits', 'rede-woocommerce' ));
             }
 
            if (strtotime(preg_replace('/(\d{2})\s*\/\s*(\d{4})/', '$2-$1-01',
                     $this->normalize_expiration_date( $posted[$this->id . '_expiry'] ) ) ) < strtotime(date('Y-m') . '-01')) {
-                throw new Exception('A data de expiração do cartão deve ser futura.');
+                throw new Exception(_e( 'Card expiration date must be future.', 'rede-woocommerce' ));
             }
 
             if (!isset($posted[$this->id . '_cvc']) || '' === $posted[$this->id . '_cvc']) {
-                throw new Exception('Por favor, informe o código de segurança do cartão');
+                throw new Exception(_e( 'Please enter card security code', 'rede-woocommerce' ));
             }
 
             if (preg_replace('/[^0-9]/', '', $posted[$this->id . '_cvc']) != $posted[$this->id . '_cvc']) {
-                throw new Exception('O código de segurança deve conter apenas números');
+                throw new Exception(_e( 'Security code must contain only numbers', 'rede-woocommerce' ));
             }
         } catch (Exception $e) {
             $this->add_error($e->getMessage());
@@ -274,7 +275,7 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway
 
         try {
             if (!isset($posted['rede_credit_installments']) || '' === $posted['rede_credit_installments']) {
-                throw new Exception('Por favor, informe o número de parcelas');
+                throw new Exception(_e( 'Please enter the number of installments', 'rede-woocommerce' ));
             }
 
             $installments = absint($posted['rede_credit_installments']);
@@ -282,7 +283,7 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway
             $max_parcels = $this->get_option('max_parcels_number');
 
             if ($installments > $max_parcels || (($min_value != 0) && (($order_total / $installments) < $min_value))) {
-                throw new Exception('Número inválido de parcelas');
+                throw new Exception(_e( 'Invalid number of installments', 'rede-woocommerce' ));
             }
         } catch (Exception $e) {
             $this->add_error($e->getMessage());

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 
 <fieldset id="rede-credit-payment-form" class="rede-payment-form">
     <p class="form-row form-row-wide">
-        <label for="rede-card-number">Número do cartão<span
+        <label for="rede-card-number"><?php _e( 'Card Number', 'rede-woocommerce' ); ?><span
                     class="required">*</span></label> <input id="rede-card-number"
                                                              name="rede_credit_number"
                                                              class="input-text wc-credit-card-form-card-number"
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 
     <?php if (is_array($installments) && count($installments) > 1) : ?>
         <p class="form-row form-row-wide">
-            <label for="installments">Parcelas <?php echo count($installments) ?><span
+            <label for="installments"><?php _e( 'Installments ', 'rede-woocommerce' ); ?><?php echo count($installments) ?><span
                         class="required">*</span></label> <select id="installments"
                                                                   name="rede_credit_installments">
                 <?php
@@ -30,7 +30,7 @@ if (!defined('ABSPATH')) {
         </p>
     <?php endif; ?>
     <p class="form-row form-row-wide">
-        <label for="rede-card-holder-name">Nome impresso no cartão<span
+        <label for="rede-card-holder-name"><?php _e( 'Name on Card', 'rede-woocommerce' ); ?><span
                     class="required">*</span></label> <input id="rede-card-holder-name"
                                                              name="rede_credit_holder_name" class="input-text"
                                                              type="text"
@@ -38,13 +38,13 @@ if (!defined('ABSPATH')) {
                                                              style="font-size: 1.5em; padding: 8px;"/>
     </p>
     <p class="form-row form-row-first">
-        <label for="rede-card-expiry">Validade do cartão<span
+        <label for="rede-card-expiry"><?php _e( 'Card Expiring Date', 'rede-woocommerce' ); ?><span
                     class="required">*</span></label> <input id="rede-card-expiry"
                                                              name="rede_credit_expiry"
                                                              class="input-text wc-credit-card-form-card-expiry"
                                                              type="tel"
                                                              autocomplete="off"
-                                                             placeholder="MM / ANO"
+                                                             placeholder="<?php _e( 'MM / YEAR', 'rede-woocommerce' ); ?>"
                                                              style="font-size: 1.5em; padding: 8px;"/>
     </p>
     <p class="form-row form-row-last">
@@ -53,7 +53,7 @@ if (!defined('ABSPATH')) {
                                                              name="rede_credit_cvc"
                                                              class="input-text wc-credit-card-form-card-cvc" type="tel"
                                                              autocomplete="off"
-                                                             placeholder="CVC"
+                                                             placeholder="<?php _e( 'CVC', 'rede-woocommerce' ); ?>"
                                                              style="font-size: 1.5em; padding: 8px;"/>
     </p>
     <div class="clear"></div>
