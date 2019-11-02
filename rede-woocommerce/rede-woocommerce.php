@@ -201,4 +201,11 @@ if (!class_exists('WC_Rede')) :
     {
         wp_clear_scheduled_hook('update_rede_orders');
     }
+    function rede_scripts() {
+        $plugin_url = plugin_dir_url( __FILE__ );
+
+        wp_enqueue_style( 'style',  $plugin_url . "/assets/css/style.css");
+    }
+
+    add_action( 'wp_enqueue_scripts', 'rede_scripts' );
 endif;

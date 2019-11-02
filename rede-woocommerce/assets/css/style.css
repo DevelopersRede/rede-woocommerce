@@ -1,0 +1,28 @@
+/*
+*
+* Inclusão dos ícones das bandeiras dos cartões de crédito
+*
+*/
+
+#payment .payment_methods li .payment_box .wc-credit-card-form-card-number {
+    background-repeat: no-repeat;
+    background-position: right 0.6180469716em center;
+    background-size: 31px 20px;
+    background-image: url("https://store-staging.v58g7ue6-liquidwebsites.com/wp-content/plugins/rede-woocommerce/assets/images/credit-cards/unknown.svg");
+}
+#payment .payment_methods li .payment_box .wc-credit-card-form-card-number.visa {
+    background-image: url("https://store-staging.v58g7ue6-liquidwebsites.com/wp-content/plugins/rede-woocommerce/assets/images/credit-cards/visa.svg"); }
+#payment .payment_methods li .payment_box .wc-credit-card-form-card-number.mastercard {
+    background-image: url("https://store-staging.v58g7ue6-liquidwebsites.com/wp-content/plugins/rede-woocommerce/assets/images/credit-cards/mastercard.svg"); }
+#payment .payment_methods li .payment_box .wc-credit-card-form-card-number.laser {
+    background-image: url("https://store-staging.v58g7ue6-liquidwebsites.com/wp-content/plugins/rede-woocommerce/assets/images/credit-cards/laser.svg"); }
+#payment .payment_methods li .payment_box .wc-credit-card-form-card-number.dinersclub {
+    background-image: url("https://store-staging.v58g7ue6-liquidwebsites.com/wp-content/plugins/rede-woocommerce/assets/images/credit-cards/diners.svg"); }
+#payment .payment_methods li .payment_box .wc-credit-card-form-card-number.maestro {
+    background-image: url("https://store-staging.v58g7ue6-liquidwebsites.com/wp-content/plugins/rede-woocommerce/assets/images/credit-cards/maestro.svg"); }
+#payment .payment_methods li .payment_box .wc-credit-card-form-card-number.jcb {
+    background-image: url("https://store-staging.v58g7ue6-liquidwebsites.com/wp-content/plugins/rede-woocommerce/assets/images/credit-cards/jcb.svg"); }
+#payment .payment_methods li .payment_box .wc-credit-card-form-card-number.amex {
+    background-image: url("https://store-staging.v58g7ue6-liquidwebsites.com/wp-content/plugins/rede-woocommerce/assets/images/credit-cards/amex.svg"); }
+#payment .payment_methods li .payment_box .wc-credit-card-form-card-number.discover {
+    background-image: url("https://store-staging.v58g7ue6-liquidwebsites.com/wp-content/plugins/rede-woocommerce/assets/images/credit-cards/discover.svg"); }
