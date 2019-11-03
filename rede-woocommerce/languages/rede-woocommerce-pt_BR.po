@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Rede WooCommerce\n"
-"POT-Creation-Date: 2019-11-02 00:55-0300\n"
-"PO-Revision-Date: 2019-11-02 00:55-0300\n"
+"POT-Creation-Date: 2019-11-02 22:54-0300\n"
+"PO-Revision-Date: 2019-11-02 22:56-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -12,33 +12,33 @@ msgstr ""
 "X-Generator: Poedit 2.2.4\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Poedit-KeywordsList: __;_e;esc_attr_e\n"
+"X-Poedit-KeywordsList: __;_e;esc_attr_e;esc_attr__;esc_html__;esc_html_e\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: includes/class-wc-rede-abstract.php:49
+#: includes/class-wc-rede-abstract.php:50
 msgid "Payment:"
 msgstr "Pagamento:"
 
-#: includes/class-wc-rede-abstract.php:50
+#: includes/class-wc-rede-abstract.php:52
 #, php-format
 msgid ""
-"<strong>Order ID</strong>: %s<br /><strong>Installments</strong>: %s<br /"
-"><strong>Transaction Id</strong>: %s<br />"
+"<strong>Order ID</strong>: %1$s<br /><strong>Installments</strong>: %2$s<br /"
+"><strong>Transaction Id</strong>: %3$s<br />"
 msgstr ""
-"<strong>ID do pedido</strong>: %s<br /><strong>Parcelas</strong>: %s<br /"
-"><strong>ID da transação</strong>: %s<br />"
+"<strong>ID do pedido</strong>: %1$s<br /><strong>Parcelas</strong>: %2$s<br /"
+"><strong>ID da transação</strong>: %3$s<br />"
 
-#: includes/class-wc-rede-abstract.php:55
+#: includes/class-wc-rede-abstract.php:60
 #, php-format
 msgid "<strong>Autorization Code</strong>: %s"
 msgstr "<strong>Código de autorização</strong>: %s"
 
-#: includes/class-wc-rede-abstract.php:113
+#: includes/class-wc-rede-abstract.php:114
 msgid "automatic check"
 msgstr "verificação automática"
 
 #: includes/class-wc-rede-abstract.php:131
-#: includes/class-wc-rede-abstract.php:152
+#: includes/class-wc-rede-abstract.php:151
 msgid "on-hold"
 msgstr "em espera"
 
@@ -50,35 +50,35 @@ msgstr "falhou"
 msgid "cancelled"
 msgstr "cancelado"
 
-#: includes/class-wc-rede-abstract.php:152
+#: includes/class-wc-rede-abstract.php:151
 msgid "processing"
 msgstr "processando"
 
-#: includes/class-wc-rede-abstract.php:152
+#: includes/class-wc-rede-abstract.php:151
 msgid "completed"
 msgstr "concluído"
 
-#: includes/class-wc-rede-abstract.php:153
+#: includes/class-wc-rede-abstract.php:152
 msgid "Your order is already being processed. For more information "
 msgstr "Seu pedido já está sendo processado. Para maiores informações "
 
-#: includes/class-wc-rede-abstract.php:153
+#: includes/class-wc-rede-abstract.php:152
 msgid "see order details"
 msgstr "ver detalhes do pedido"
 
-#: includes/class-wc-rede-abstract.php:155
+#: includes/class-wc-rede-abstract.php:154
 msgid "For more details on your order, please visit "
 msgstr "Para mais detalhes sobre o seu pedido, visite "
 
-#: includes/class-wc-rede-abstract.php:155
+#: includes/class-wc-rede-abstract.php:154
 msgid "order details page"
 msgstr "página de detalhes do pedido"
 
-#: includes/class-wc-rede-abstract.php:168
+#: includes/class-wc-rede-abstract.php:166
 msgid "Please enter a valid credit card number"
 msgstr "Digite um número de cartão de crédito válido"
 
-#: includes/class-wc-rede-abstract.php:179
+#: includes/class-wc-rede-abstract.php:176
 msgid "Please enter cardholder name"
 msgstr "Digite o nome do titular do cartão"
 
@@ -94,208 +94,208 @@ msgstr "Digite a data de validade do cartão"
 msgid "Expiration date must contain 2 or 4 digits"
 msgstr "A data de validade deve conter 2 ou 4 dígitos"
 
-#: includes/class-wc-rede-abstract.php:199
+#: includes/class-wc-rede-abstract.php:204
 msgid "Card expiration date must be future."
 msgstr "A data de validade do cartão deve ser futura."
 
-#: includes/class-wc-rede-abstract.php:203
+#: includes/class-wc-rede-abstract.php:208
 msgid "Please enter card security code"
 msgstr "Digite o código de segurança do cartão"
 
-#: includes/class-wc-rede-abstract.php:207
+#: includes/class-wc-rede-abstract.php:212
 msgid "Security code must contain only numbers"
 msgstr "O código de segurança deve conter apenas números"
 
-#: includes/class-wc-rede-abstract.php:278
+#: includes/class-wc-rede-abstract.php:281
 msgid "Please enter the number of installments"
 msgstr "Escolha o número de parcelas"
 
-#: includes/class-wc-rede-abstract.php:286
+#: includes/class-wc-rede-abstract.php:289
 msgid "Invalid number of installments"
 msgstr "Número de parcelas inválido"
 
-#: includes/class-wc-rede-credit.php:12
+#: includes/class-wc-rede-credit.php:11
 msgid "Pay with the Rede"
 msgstr "Pague com a Rede"
 
-#: includes/class-wc-rede-credit.php:13
+#: includes/class-wc-rede-credit.php:12
 msgid "Enables and configures payments with Rede"
 msgstr "Ativa e configura pagamentos com Rede"
 
-#: includes/class-wc-rede-credit.php:94
+#: includes/class-wc-rede-credit.php:123
 msgid "Rede"
 msgstr "Rede"
 
-#: includes/class-wc-rede-credit.php:98 includes/class-wc-rede-credit.php:198
+#: includes/class-wc-rede-credit.php:127 includes/class-wc-rede-credit.php:226
 msgid "Environment"
 msgstr "Ambiente"
 
-#: includes/class-wc-rede-credit.php:103
+#: includes/class-wc-rede-credit.php:132
 msgid "Return Code"
 msgstr "Código de retorno"
 
-#: includes/class-wc-rede-credit.php:108
+#: includes/class-wc-rede-credit.php:137
 msgid "Return Message"
 msgstr "Mensagem de retorno"
 
-#: includes/class-wc-rede-credit.php:114
+#: includes/class-wc-rede-credit.php:143
 msgid "Transaction ID"
 msgstr "ID da transação"
 
-#: includes/class-wc-rede-credit.php:121
+#: includes/class-wc-rede-credit.php:150
 msgid "Refund ID"
 msgstr "ID do reembolso"
 
-#: includes/class-wc-rede-credit.php:128
+#: includes/class-wc-rede-credit.php:157
 msgid "Cancellation ID"
 msgstr "ID de cancelamento"
 
-#: includes/class-wc-rede-credit.php:135
+#: includes/class-wc-rede-credit.php:164
 msgid "Nsu"
 msgstr "Nsu"
 
-#: includes/class-wc-rede-credit.php:142
+#: includes/class-wc-rede-credit.php:171
 msgid "Authorization Code"
 msgstr "Código de autorização"
 
-#: includes/class-wc-rede-credit.php:148
+#: includes/class-wc-rede-credit.php:177
 msgid "Bin"
 msgstr "Bin"
 
-#: includes/class-wc-rede-credit.php:153
+#: includes/class-wc-rede-credit.php:182
 msgid "Last 4"
 msgstr "4 últimos dígitos"
 
-#: includes/class-wc-rede-credit.php:158
+#: includes/class-wc-rede-credit.php:187
 msgid "Installments"
 msgstr "Parcelas"
 
-#: includes/class-wc-rede-credit.php:164
+#: includes/class-wc-rede-credit.php:193
 msgid "Cardholder"
 msgstr "Titular do cartão"
 
-#: includes/class-wc-rede-credit.php:169
+#: includes/class-wc-rede-credit.php:198
 msgid "Card Expiration"
 msgstr "Validade do cartão"
 
-#: includes/class-wc-rede-credit.php:182
+#: includes/class-wc-rede-credit.php:210
 msgid "Enable/Disable"
 msgstr "Habilitar/Desabilitar"
 
-#: includes/class-wc-rede-credit.php:184
+#: includes/class-wc-rede-credit.php:212
 msgid "Enables payment with Rede"
 msgstr "Permite pagamento com Rede"
 
-#: includes/class-wc-rede-credit.php:188
+#: includes/class-wc-rede-credit.php:216
 msgid "Title"
 msgstr "Título"
 
-#: includes/class-wc-rede-credit.php:190
+#: includes/class-wc-rede-credit.php:218
 msgid "Pay with Rede"
 msgstr "Pague com a Rede"
 
-#: includes/class-wc-rede-credit.php:194
+#: includes/class-wc-rede-credit.php:222
 msgid "General configuration"
 msgstr "Configuração geral"
 
-#: includes/class-wc-rede-credit.php:200
+#: includes/class-wc-rede-credit.php:228
 msgid "Choose the environment"
 msgstr "Escolha o ambiente"
 
-#: includes/class-wc-rede-credit.php:203
+#: includes/class-wc-rede-credit.php:231
 msgid "test"
 msgstr "teste"
 
-#: includes/class-wc-rede-credit.php:205
+#: includes/class-wc-rede-credit.php:233
 msgid "Tests"
 msgstr "Testes"
 
-#: includes/class-wc-rede-credit.php:206
+#: includes/class-wc-rede-credit.php:234
 msgid "Production"
 msgstr "Produção"
 
-#: includes/class-wc-rede-credit.php:210
+#: includes/class-wc-rede-credit.php:238
 msgid "PV"
 msgstr "PV"
 
-#: includes/class-wc-rede-credit.php:215
+#: includes/class-wc-rede-credit.php:243
 msgid "Token"
 msgstr "Token"
 
-#: includes/class-wc-rede-credit.php:221
+#: includes/class-wc-rede-credit.php:249
 msgid "Soft Descriptor"
 msgstr "Soft Descriptor"
 
-#: includes/class-wc-rede-credit.php:227
+#: includes/class-wc-rede-credit.php:255
 msgid "Credit Card Settings"
 msgstr "Configurações do cartão de crédito"
 
-#: includes/class-wc-rede-credit.php:232
+#: includes/class-wc-rede-credit.php:260
 msgid "Authorization and Capture"
 msgstr "Autorização e captura"
 
-#: includes/class-wc-rede-credit.php:237
+#: includes/class-wc-rede-credit.php:265
 msgid "Authorize and capture automatically"
 msgstr "Autorize e capture automaticamente"
 
-#: includes/class-wc-rede-credit.php:238
+#: includes/class-wc-rede-credit.php:266
 msgid "Just authorize"
 msgstr "Apenas autorize"
 
-#: includes/class-wc-rede-credit.php:242
+#: includes/class-wc-rede-credit.php:270
 msgid "Value of the smallest installment"
 msgstr "Valor da menor parcela"
 
-#: includes/class-wc-rede-credit.php:247
+#: includes/class-wc-rede-credit.php:275
 msgid "Max installments"
 msgstr "Máximo de parcelas"
 
-#: includes/class-wc-rede-credit.php:268
+#: includes/class-wc-rede-credit.php:296
 msgid "Partner Settings"
 msgstr "Configurações do parceiro"
 
-#: includes/class-wc-rede-credit.php:272
+#: includes/class-wc-rede-credit.php:300
 msgid "Module ID"
 msgstr "ID do módulo"
 
-#: includes/class-wc-rede-credit.php:277
+#: includes/class-wc-rede-credit.php:305
 msgid "Gateway ID"
 msgstr "ID do gateway"
 
-#: includes/class-wc-rede-credit.php:283
+#: includes/class-wc-rede-credit.php:311
 msgid "Developer Settings"
 msgstr "Configurações do desenvolvedor"
 
-#: includes/class-wc-rede-credit.php:288
+#: includes/class-wc-rede-credit.php:316
 msgid "Debug"
 msgstr "Depurar"
 
-#: includes/class-wc-rede-credit.php:290
+#: includes/class-wc-rede-credit.php:318
 msgid "Enable debug logs"
 msgstr "Ativar logs de depuração"
 
-#: includes/class-wc-rede-credit.php:291
+#: includes/class-wc-rede-credit.php:319
 msgid "no"
 msgstr "não"
 
-#: includes/class-wc-rede-credit.php:465
+#: includes/class-wc-rede-credit.php:488
 msgid "Refunded:"
 msgstr "Reembolsado:"
 
-#: includes/class-wc-rede-credit.php:494
+#: includes/class-wc-rede-credit.php:516
 msgid "Captured"
 msgstr "Capturado"
 
-#: includes/views/notices/html-notice-woocommerce-missing.php:18
+#: includes/views/notices/html-notice-woocommerce-missing.php:23
 msgid "Rede WooCommerce Disabled"
 msgstr "Rede WooCommerce Disabilitado"
 
-#: includes/views/notices/html-notice-woocommerce-missing.php:19
+#: includes/views/notices/html-notice-woocommerce-missing.php:31
 #, php-format
 msgid "This plugin depends on the last version of %s to work!"
 msgstr "Este plugin depende da última versão do %s para funcionar!"
 
-#: includes/views/notices/html-notice-woocommerce-missing.php:21
+#: includes/views/notices/html-notice-woocommerce-missing.php:34
 msgid "WooCommerce"
 msgstr "WooCommerce"
 

@@ -57,7 +57,7 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway {
 				),
 			);
 
-			$items['payment_return']['value'] .= sprintf( esc_attr__( '<strong>Autorization Code</strong>: %s', 'rede-woocommerce' ), $authorization_code );
+			$items['payment_return']['value'] .= sprintf( __( '<strong>Autorization Code</strong>: %s', 'rede-woocommerce' ), $authorization_code );
 
 			$items[] = $last;
 		}
