@@ -1,3 +1,9 @@
+#Importante
+
+Utilize sempre a última release para a instalação da versão mais recente do módulo
+
+https://github.com/DevelopersRede/woocommerce/releases
+
 # Módulo WooCommerce
 
 Esse módulo foi desenvolvido com suporte ao WooCommerce 3+.
