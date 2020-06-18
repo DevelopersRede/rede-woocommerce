@@ -70,8 +70,8 @@ Após a instalação, navegue até menu _WooCommerce > Settings > Payments_ e ha
 
 Nas configurações do módulo é possível informar o tipo de transações a ser realizada.
 
-* Captura automática – a transação é capturada automaticamente no momento da confirmação do pagamento. (Status Processing)
-* Captura posterior – a transação é autorizada, porém permite que a captura seja realizada posteriormente dentro da área administrativa da loja. (Status On Hold)
+* Captura automática – a transação é capturada automaticamente no momento da confirmação do pagamento.
+* Captura posterior – a transação é autorizada, porém permite que a captura seja realizada posteriormente dentro da área administrativa da loja.
 
 **Etapa 4.1 – Captura**
 
