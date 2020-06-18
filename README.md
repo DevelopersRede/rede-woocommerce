@@ -46,8 +46,8 @@ Por questão de boas práticas realize o backup da loja e banco de dados antes d
 
 Após realizar o download do arquivo siga as seguintes instruções:
 
-•	Descompacte o conteúdo do arquivo dentro da pasta wp-content/plugins;
-•	Na área administrativa da loja vá até Plugins > Installed Plugins e ative o módulo Rede WooCommerce;
+* Descompacte o conteúdo do arquivo dentro da pasta wp-content/plugins;
+*	Na área administrativa da loja vá até Plugins > Installed Plugins e ative o módulo Rede WooCommerce;
 
 **Etapa 3 – Configurando o módulo**
 
