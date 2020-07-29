@@ -59,8 +59,8 @@ if (!defined('ABSPATH')) {
         <select id="select_credit_expiry_year" class="input-select-cred-card expiry-year"
                 onchange="updateCardExpiry()">
             <?php
-            foreach (range(date('Y'), date('Y') + 20) as $year) {
-                printf('<option value="%d">%d</option>', $year, $year);
+            foreach (range(date('y'), date('y') + 20) as $year) {
+                printf('<option value="%d">%d</option>', "20{$year}", $year);
             }
             ?>
         </select>
@@ -102,11 +102,7 @@ if (!defined('ABSPATH')) {
     .input-select-cred-card-bar{
         font-size: 1.5em;
     }
-    .input-select-cred-card.expiry-month {
+    .input-select-cred-card.expiry-month, .input-select-cred-card.expiry-year {
         width: 70px !important;
-    }
-
-    .input-select-cred-card.expiry-year {
-        width: 90px !important;
     }
 </style>
