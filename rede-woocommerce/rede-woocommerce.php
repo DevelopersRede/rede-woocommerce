@@ -1,198 +1,200 @@
 <?php
 /**
  * Plugin Name: Rede WooCommerce
- * Plugin URI:        https://github.com/DevelopersRede/woocommerce
+ * Plugin URI:  https://github.com/DevelopersRede/woocommerce
  * Description: Rede API integration for WooCommerce
  * Author:      Rede
- * Version:     1.2.2
+ * Author URI:  https://www.userede.com.br/
+ * Version:     2.0.0
  * Text Domain: rede-woocommerce
+ * Requires at least: 5.5
+ * Requires PHP: 7.2
  *
  * @package WC_Rede
  */
-if (!defined('ABSPATH')) {
-    exit();
+if ( ! defined( 'ABSPATH' ) ) {
+	exit();
 }
 
-if (!class_exists('WC_Rede')) :
+if ( ! class_exists( 'WC_Rede' ) ) :
 
-    class WC_Rede
-    {
+	class WC_Rede {
 
-        const VERSION = '1.2.2';
+		const VERSION = '2.0.0';
 
-        protected static $instance = null;
+		protected static $instance = null;
 
-        private function __construct()
-        {
-            add_action('init', array(
-                $this,
-                'load_plugin_textdomain'
-            ));
+		private function __construct() {
+			add_action( 'init', array(
+				$this,
+				'load_plugin_textdomain'
+			) );
 
-            add_action('woocommerce_order_status_on-hold_to_processing', array($this, 'capture_payment'));
+			add_action( 'woocommerce_order_status_on-hold_to_processing', array( $this, 'capture_payment' ) );
 
-            if (class_exists('WC_Payment_Gateway')) {
-                $this->upgrade();
-                $this->includes();
+			add_filter( 'plugin_row_meta', array(
+				$this,
+				'plugin_row_meta'
+			), 10, 2 );
 
-                add_filter('woocommerce_payment_gateways', array(
-                    $this,
-                    'add_gateway'
-                ));
-                add_action('wp_enqueue_scripts', array(
-                    $this,
-                    'register_scripts'
-                ));
+			if ( class_exists( 'WC_Payment_Gateway' ) ) {
+				$this->upgrade();
+				$this->includes();
 
-                if (is_admin()) {
-                    add_filter('plugin_action_links_' . plugin_basename(__FILE__), array(
-                        $this,
-                        'plugin_action_links'
-                    ));
-                }
-            } else {
-                add_action('admin_notices', array(
-                    $this,
-                    'woocommerce_missing_notice'
-                ));
-            }
-        }
+				add_filter( 'woocommerce_payment_gateways', array(
+					$this,
+					'add_gateway'
+				) );
+				add_action( 'wp_enqueue_scripts', array(
+					$this,
+					'register_scripts'
+				) );
 
-        public function register_scripts()
-        {
-        }
+				if ( is_admin() ) {
+					add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array(
+						$this,
+						'plugin_action_links'
+					) );
+				}
+			} else {
+				add_action( 'admin_notices', array(
+					$this,
+					'woocommerce_missing_notice'
+				) );
+			}
+		}
 
-        public static function get_instance()
-        {
-            if (null == self::$instance) {
-                self::$instance = new self();
-            }
+		public static function plugin_row_meta( $links, $file ) {
+			$row_meta = array(
+				'erededocs' => '<a target="_blank" href="https://www.userede.com.br/desenvolvedores/pt/produto/e-Rede#documentacao" aria-label="Veja a documentação da API">Documentação da API</a>',
+			);
 
-            return self::$instance;
-        }
+			return array_merge( $links, $row_meta );
+		}
 
-        public static function get_templates_path()
-        {
-            return plugin_dir_path(__FILE__) . 'templates/';
-        }
+		public function register_scripts() {
+		}
 
-        public function load_plugin_textdomain()
-        {
-            load_plugin_textdomain('rede-woocommerce', false, dirname(plugin_basename(__FILE__)) . '/languages/');
-        }
+		public static function get_instance() {
+			if ( null == self::$instance ) {
+				self::$instance = new self();
+			}
 
-        private function includes()
-        {
-            include_once dirname(__FILE__) . '/includes/class-wc-rede-abstract.php';
-            include_once dirname(__FILE__) . '/includes/class-wc-rede-credit.php';
-            include_once dirname(__FILE__) . '/includes/class-wc-rede-api.php';
-            include_once dirname(__FILE__) . '/vendor/autoload.php';
-        }
+			return self::$instance;
+		}
 
-        public function add_gateway($methods)
-        {
-            array_push($methods, 'WC_Rede_Credit');
+		public static function get_templates_path() {
+			return plugin_dir_path( __FILE__ ) . 'templates/';
+		}
 
-            return $methods;
-        }
+		public function load_plugin_textdomain() {
+			load_plugin_textdomain( 'rede-woocommerce', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		}
 
-        private function upgrade()
-        {
-            if (is_admin()) {
-                $version = get_option('wc_rede_version', '0');
+		private function includes() {
+			include_once dirname( __FILE__ ) . '/includes/class-wc-rede-abstract.php';
+			include_once dirname( __FILE__ ) . '/includes/class-wc-rede-credit.php';
+			include_once dirname( __FILE__ ) . '/includes/class-wc-rede-api.php';
+			include_once dirname( __FILE__ ) . '/vendor/autoload.php';
+		}
 
-                if (version_compare($version, WC_Rede::VERSION, '<')) {
-                    if ($options = get_option('woocommerce_rede_settings')) {
-                        $credit_options = array(
-                            'enabled' => $options['enabled'],
-                            'title' => 'Ativar',
+		public function add_gateway( $methods ) {
+			array_push( $methods, 'WC_Rede_Credit' );
 
-                            'environment' => $options['environment'],
-                            'token' => $options['token'],
-                            'pv' => $options['pv'],
+			return $methods;
+		}
 
-                            'soft_descriptor' => $options['soft_descriptor'],
-                            'auto_capture' => $options['authorization'],
+		private function upgrade() {
+			if ( is_admin() ) {
+				$version = get_option( 'wc_rede_version', '0' );
 
-                            'min_parcels_value' => $options['smallest_installment'],
-                            'max_parcels_number' => $options['installments']
-                        );
+				if ( version_compare( $version, WC_Rede::VERSION, '<' ) ) {
+					if ( $options = get_option( 'woocommerce_rede_settings' ) ) {
+						$credit_options = array(
+							'enabled' => $options['enabled'],
+							'title'   => 'Ativar',
 
-                        update_option('woocommerce_rede_credit_settings', $credit_options);
+							'environment' => $options['environment'],
+							'token'       => $options['token'],
+							'pv'          => $options['pv'],
 
-                        delete_option('woocommerce_rede_settings');
-                    }
+							'soft_descriptor' => $options['soft_descriptor'],
+							'auto_capture'    => $options['authorization'],
 
-                    update_option('wc_rede_version', WC_Rede::VERSION);
-                }
-            }
-        }
+							'min_parcels_value'  => $options['smallest_installment'],
+							'max_parcels_number' => $options['installments']
+						);
 
-        public function woocommerce_missing_notice()
-        {
-            include_once dirname(__FILE__) . '/includes/views/notices/html-notice-woocommerce-missing.php';
-        }
+						update_option( 'woocommerce_rede_credit_settings', $credit_options );
 
-        public function plugin_action_links($links)
-        {
-            $plugin_links = array();
+						delete_option( 'woocommerce_rede_settings' );
+					}
 
-            if (defined('WC_VERSION') && version_compare(WC_VERSION, '2.1', '>=')) {
-                $plugin_links[] = '<a href="' . esc_url(admin_url('admin.php?page=wc-settings&tab=checkout&section=rede_credit')) . '">Configurações</a>';
-            } else {
-                $plugin_links[] = '<a href="' . esc_url(admin_url('admin.php?page=wc-settings&tab=checkout&section=wc_rede_credit')) . '">Configurações</a>';
-            }
+					update_option( 'wc_rede_version', WC_Rede::VERSION );
+				}
+			}
+		}
 
-            return array_merge($plugin_links, $links);
-        }
-    }
+		public function woocommerce_missing_notice() {
+			include_once dirname( __FILE__ ) . '/includes/views/notices/html-notice-woocommerce-missing.php';
+		}
 
-    add_action('plugins_loaded', array(
-        'WC_Rede',
-        'get_instance'
-    ), 0);
+		public function plugin_action_links( $links ) {
+			$plugin_links = array();
 
-    register_activation_hook(__FILE__, 'rede_activation');
+			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+				$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=rede_credit' ) ) . '">Configurações</a>';
+			} else {
+				$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_rede_credit' ) ) . '">Configurações</a>';
+			}
 
-    function rede_activation()
-    {
-        if (!wp_next_scheduled('update_rede_orders')) {
-            wp_schedule_event(current_time('timestamp'), 'hourly', 'update_rede_orders');
-        }
-    }
+			return array_merge( $plugin_links, $links );
+		}
+	}
 
-    add_action('update_rede_orders', 'update_rede_orders');
+	add_action( 'plugins_loaded', array(
+		'WC_Rede',
+		'get_instance'
+	), 0 );
 
-    function update_rede_orders()
-    {
-        $orders = new WP_Query(array(
-            'post_type' => 'shop_order',
-            'post_status' => array('wc-on-hold', 'wc-processing')
-        ));
+	register_activation_hook( __FILE__, 'rede_activation' );
+
+	function rede_activation() {
+		if ( ! wp_next_scheduled( 'update_rede_orders' ) ) {
+			wp_schedule_event( current_time( 'timestamp' ), 'hourly', 'update_rede_orders' );
+		}
+	}
+
+	add_action( 'update_rede_orders', 'update_rede_orders' );
+
+	function update_rede_orders() {
+		$orders = new WP_Query( array(
+			'post_type'   => 'shop_order',
+			'post_status' => array( 'wc-on-hold', 'wc-processing' )
+		) );
 
 
-        foreach ($orders->posts as $order) {
-            $wc_order = new WC_Order($order->get_id());
-            $wc_id = $wc_order->get_id();
-            $payment_gateway = wc_get_payment_gateway_by_order($wc_order);
-            $order_id = get_post_meta($wc_id, '_wc_rede_order_id', true);
-            $status = get_post_meta($wc_id, '_wc_rede_status', true);
-            $tid = $tid = get_post_meta($wc_id, '_wc_rede_transaction_id', true);
+		foreach ( $orders->posts as $order ) {
+			$wc_order        = new WC_Order( $order->get_id() );
+			$wc_id           = $wc_order->get_id();
+			$payment_gateway = wc_get_payment_gateway_by_order( $wc_order );
+			$order_id        = get_post_meta( $wc_id, '_wc_rede_order_id', true );
+			$status          = get_post_meta( $wc_id, '_wc_rede_status', true );
+			$tid             = $tid = get_post_meta( $wc_id, '_wc_rede_transaction_id', true );
 
-            if ($payment_gateway instanceof WC_Rede_Abstract) {
-                if ($status == 'PENDING' || $status == 'SUBMITTED') {
-                    $payment_gateway->consult_order($wc_order, $order_id, $tid, $status);
-                }
-            }
+			if ( $payment_gateway instanceof WC_Rede_Abstract ) {
+				if ( $status == 'PENDING' || $status == 'SUBMITTED' ) {
+					$payment_gateway->consult_order( $wc_order, $order_id, $tid, $status );
+				}
+			}
 
-        }
+		}
 
-    }
+	}
 
-    register_deactivation_hook(__FILE__, 'rede_deactivation');
+	register_deactivation_hook( __FILE__, 'rede_deactivation' );
 
-    function rede_deactivation()
-    {
-        wp_clear_scheduled_hook('update_rede_orders');
-    }
+	function rede_deactivation() {
+		wp_clear_scheduled_hook( 'update_rede_orders' );
+	}
 endif;

@@ -1,253 +1,240 @@
 <?php
 
 
-abstract class WC_Rede_Abstract extends WC_Payment_Gateway
-{
-    public $debug = 'no';
-    public $auto_capture = true;
-    public $min_parcels_value = 0;
-    public $mas_parcels_number = 12;
+use Rede\Transaction;
 
-    public function get_valid_value($value)
-    {
-        return preg_replace('/[^\d\.]+/', '', str_replace(',', '.', $value));
-    }
+abstract class WC_Rede_Abstract extends WC_Payment_Gateway {
+	public $debug = 'no';
+	public $auto_capture = true;
+	public $min_parcels_value = 0;
+	public $mas_parcels_number = 12;
 
-    public function get_api_return_url($order)
-    {
-        global $woocommerce;
+	public function get_valid_value( $value ) {
+		return preg_replace( '/[^\d\.]+/', '', str_replace( ',', '.', $value ) );
+	}
 
-        $url = $woocommerce->api_request_url(get_class($this));
+	public function get_api_return_url( $order ) {
+		global $woocommerce;
 
-        return urlencode(add_query_arg(array(
-            'key' => $order->order_key,
-            'order' => $order->get_id()
-        ), $url));
-    }
+		$url = $woocommerce->api_request_url( get_class( $this ) );
 
-    public function get_logger()
-    {
-        if (class_exists('WC_Logger')) {
-            return new WC_Logger();
-        } else {
-            global $woocommerce;
+		return urlencode( add_query_arg( array(
+			'key'   => $order->order_key,
+			'order' => $order->get_id()
+		), $url ) );
+	}
 
-            return $woocommerce->logger();
-        }
-    }
+	public function get_logger() {
+		if ( class_exists( 'WC_Logger' ) ) {
+			return new WC_Logger();
+		} else {
+			global $woocommerce;
 
-    public function order_items_payment_details($items, $order)
-    {
-        $order_id = $order->get_id();
+			return $woocommerce->logger();
+		}
+	}
 
-        if ($this->id === $order->get_payment_method()) {
-            $tid = get_post_meta($order_id, '_wc_rede_transaction_id', true);
-            $authorization_code = get_post_meta($order_id, '_wc_rede_transaction_authorization_code', true);
-            $installments = get_post_meta($order_id, '_wc_rede_transaction_installments', true);
-            $last = array_pop($items);
-            $items['payment_return'] = array(
-                'label' => 'Payment:',
-                'value' => sprintf('<strong>Order ID</strong>: %s<br /><strong>Installments</strong>: %s<br /><strong>Transaction Id</strong>: %s<br />',
-                    $order_id, $installments, $tid)
-            );
+	public function order_items_payment_details( $items, $order ) {
+		$order_id = $order->get_id();
 
-            $items['payment_return']['value'] .= sprintf('<strong>Autorization Code</strong>: %s', $authorization_code);
+		if ( $this->id === $order->get_payment_method() ) {
+			$tid                     = get_post_meta( $order_id, '_wc_rede_transaction_id', true );
+			$authorization_code      = get_post_meta( $order_id, '_wc_rede_transaction_authorization_code', true );
+			$installments            = get_post_meta( $order_id, '_wc_rede_transaction_installments', true );
+			$last                    = array_pop( $items );
+			$items['payment_return'] = array(
+				'label' => 'Payment:',
+				'value' => sprintf( '<strong>Order ID</strong>: %s<br /><strong>Installments</strong>: %s<br /><strong>Transaction Id</strong>: %s<br />',
+					$order_id, $installments, $tid )
+			);
 
-            $items[] = $last;
-        }
+			$items['payment_return']['value'] .= sprintf( '<strong>Autorization Code</strong>: %s', $authorization_code );
 
-        return $items;
-    }
+			$items[] = $last;
+		}
 
-    public function get_payment_method_name($slug)
-    {
-        $methods = 'rede';
+		return $items;
+	}
 
-        if (isset($methods[$slug])) {
-            return $methods[$slug];
-        }
+	public function get_payment_method_name( $slug ) {
+		$methods = 'rede';
 
-        return $slug;
-    }
+		if ( isset( $methods[ $slug ] ) ) {
+			return $methods[ $slug ];
+		}
 
-    public function payment_fields()
-    {
-        if ($description = $this->get_description()) {
-            echo wpautop(wptexturize($description));
-        }
+		return $slug;
+	}
 
-        wp_enqueue_script('wc-credit-card-form');
+	public function payment_fields() {
+		if ( $description = $this->get_description() ) {
+			echo wpautop( wptexturize( $description ) );
+		}
 
-        $this->get_checkout_form($this->get_order_total());
-    }
+		wp_enqueue_script( 'wc-credit-card-form' );
 
-    abstract protected function get_checkout_form($order_total = 0);
+		$this->get_checkout_form( $this->get_order_total() );
+	}
 
-    public function get_order_total()
-    {
-        global $woocommerce;
+	abstract protected function get_checkout_form( $order_total = 0 );
 
-        $order_total = 0;
+	public function get_order_total() {
+		global $woocommerce;
 
-        if (defined('WC_VERSION') && version_compare(WC_VERSION, '2.1', '>=')) {
-            $order_id = absint(get_query_var('order-pay'));
-        } else {
-            $order_id = isset($_GET['order_id']) ? absint($_GET['order_id']) : 0;
-        }
+		$order_total = 0;
 
-        if (0 < $order_id) {
-            $order = new WC_Order($order_id);
-            $order_total = (float)$order->get_total();
-        } elseif (0 < $woocommerce->cart->total) {
-            $order_total = (float)$woocommerce->cart->total;
-        }
+		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+			$order_id = absint( get_query_var( 'order-pay' ) );
+		} else {
+			$order_id = isset( $_GET['order_id'] ) ? absint( $_GET['order_id'] ) : 0;
+		}
 
-        return $order_total;
-    }
+		if ( 0 < $order_id ) {
+			$order       = new WC_Order( $order_id );
+			$order_total = (float) $order->get_total();
+		} elseif ( 0 < $woocommerce->cart->total ) {
+			$order_total = (float) $woocommerce->cart->total;
+		}
 
-    public function consult_order($order, $id, $tid, $status)
-    {
-        $transaction = $this->api->do_transaction_consultation($tid);
+		return $order_total;
+	}
 
-        $this->process_order_status($order, $transaction, 'verificação automática');
-    }
+	public function consult_order( $order, $id, $tid, $status ) {
+		$transaction = $this->api->do_transaction_consultation( $tid );
 
-    /**
-     * @param $order
-     * @param \Rede\Transaction $transaction
-     * @param string $note
-     */
-    public function process_order_status($order, $transaction, $note = '')
-    {
-        $status_note = sprintf('Rede[%s]', $transaction->getReturnMessage());
+		$this->process_order_status( $order, $transaction, 'verificação automática' );
+	}
 
-        $order->add_order_note($status_note . ' ' . $note);
+	/**
+	 * @param $order
+	 * @param Transaction $transaction
+	 * @param string $note
+	 */
+	public function process_order_status( $order, $transaction, $note = '' ) {
+		$status_note = sprintf( 'Rede[%s]', $transaction->getReturnMessage() );
 
-        if ($transaction->getReturnCode() == '00') {
-            if ($transaction->getCapture()) {
-                $order->payment_complete();
-            } else {
-                $order->update_status('on-hold');
-                wc_reduce_stock_levels($order->get_id());
-            }
-        } else {
-            $order->update_status('failed', $status_note);
-            $order->update_status('cancelled', $status_note);
-        }
+		$order->add_order_note( $status_note . ' ' . $note );
 
-        WC()->cart->empty_cart();
-    }
+		if ( $transaction->getReturnCode() == '00' ) {
+			if ( $transaction->getCapture() ) {
+				$order->payment_complete();
+			} else {
+				$order->update_status( 'on-hold' );
+				wc_reduce_stock_levels( $order->get_id() );
+			}
+		} else {
+			$order->update_status( 'failed', $status_note );
+			$order->update_status( 'cancelled', $status_note );
+		}
 
-    public function thankyou_page($order_id)
-    {
-        $order = new WC_Order($order_id);
+		WC()->cart->empty_cart();
+	}
 
-        if (defined('WC_VERSION') && version_compare(WC_VERSION, '2.1', '>=')) {
-            $order_url = $order->get_view_order_url();
-        } else {
-            $order_url = add_query_arg('order', $order_id, get_permalink(woocommerce_get_page_id('view_order')));
-        }
+	public function thankyou_page( $order_id ) {
+		$order = new WC_Order( $order_id );
 
-        if ($order->get_status() == 'on-hold' || $order->get_status() == 'processing' || $order->get_status() == 'completed') {
-            echo '<div class="woocommerce-message">Seu pedido já está sendo processado. Para mais informações, <a href="' . esc_url($order_url) . '" class="button" style="display: block !important; visibility: visible !important;">veja os detalhes do pedido</a><br /></div>';
-        } else {
-            echo '<div class="woocommerce-info">Para mais detalhes sobre seu pedido, acesse <a href="' . esc_url($order_url) . '">página de detalhes do pedido</a></div>';
-        }
-    }
+		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+			$order_url = $order->get_view_order_url();
+		} else {
+			$order_url = add_query_arg( 'order', $order_id, get_permalink( woocommerce_get_page_id( 'view_order' ) ) );
+		}
 
-    protected function validate_card_number($card_number)
-    {
-        $card_number_checksum = '';
+		if ( $order->get_status() == 'on-hold' || $order->get_status() == 'processing' || $order->get_status() == 'completed' ) {
+			echo '<div class="woocommerce-message">Seu pedido já está sendo processado. Para mais informações, <a href="' . esc_url( $order_url ) . '" class="button" style="display: block !important; visibility: visible !important;">veja os detalhes do pedido</a><br /></div>';
+		} else {
+			echo '<div class="woocommerce-info">Para mais detalhes sobre seu pedido, acesse <a href="' . esc_url( $order_url ) . '">página de detalhes do pedido</a></div>';
+		}
+	}
 
-        foreach (str_split(strrev(preg_replace('/[^\d]/', '', $card_number))) as $i => $d) {
-            $card_number_checksum .= $i % 2 !== 0 ? $d * 2 : $d;
-        }
+	protected function validate_card_number( $card_number ) {
+		$card_number_checksum = '';
 
-        if (array_sum(str_split($card_number_checksum)) % 10 !== 0) {
-            throw new Exception('Por favor, informe um número válido de cartão de crédito');
-        }
+		foreach ( str_split( strrev( preg_replace( '/[^\d]/', '', $card_number ) ) ) as $i => $d ) {
+			$card_number_checksum .= $i % 2 !== 0 ? $d * 2 : $d;
+		}
 
-        return true;
-    }
+		if ( array_sum( str_split( $card_number_checksum ) ) % 10 !== 0 ) {
+			throw new Exception( 'Por favor, informe um número válido de cartão de crédito' );
+		}
 
-    protected function validate_card_fields($posted)
-    {
-        try {
-            if (!isset($posted[$this->id . '_holder_name']) || '' === $posted[$this->id . '_holder_name']) {
-                throw new Exception('Por favor informe o nome do titular do cartão');
-            }
+		return true;
+	}
 
-            if (preg_replace('/[^a-zA-Z\s]/', '',
-                    $posted[$this->id . '_holder_name']) != $posted[$this->id . '_holder_name']) {
-                throw new Exception('O nome do titular do cartão só pode conter letras');
-            }
+	protected function validate_card_fields( $posted ) {
+		try {
+			if ( ! isset( $posted[ $this->id . '_holder_name' ] ) || '' === $posted[ $this->id . '_holder_name' ] ) {
+				throw new Exception( 'Por favor informe o nome do titular do cartão' );
+			}
 
-            if (!isset($posted[$this->id . '_expiry']) || '' === $posted[$this->id . '_expiry']) {
-                throw new Exception('Por favor, informe a data de expiração do cartão');
-            }
+			if ( preg_replace( '/[^a-zA-Z\s]/', '',
+					$posted[ $this->id . '_holder_name' ] ) != $posted[ $this->id . '_holder_name' ] ) {
+				throw new Exception( 'O nome do titular do cartão só pode conter letras' );
+			}
 
-            if (strtotime(preg_replace('/(\d{2})\s*\/\s*(\d{4})/', '$2-$1-01',
-                    $posted[$this->id . '_expiry'])) < strtotime(date('Y-m') . '-01')) {
-                throw new Exception('A data de expiração do cartão deve ser futura');
-            }
+			if ( ! isset( $posted[ $this->id . '_expiry' ] ) || '' === $posted[ $this->id . '_expiry' ] ) {
+				throw new Exception( 'Por favor, informe a data de expiração do cartão' );
+			}
 
-            if (!isset($posted[$this->id . '_cvc']) || '' === $posted[$this->id . '_cvc']) {
-                throw new Exception('Por favor, informe o código de segurança do cartão');
-            }
+			if ( strtotime( preg_replace( '/(\d{2})\s*\/\s*(\d{4})/', '$2-$1-01',
+					$posted[ $this->id . '_expiry' ] ) ) < strtotime( date( 'Y-m' ) . '-01' ) ) {
+				throw new Exception( 'A data de expiração do cartão deve ser futura' );
+			}
 
-            if (preg_replace('/[^0-9]/', '', $posted[$this->id . '_cvc']) != $posted[$this->id . '_cvc']) {
-                throw new Exception('O código de segurança deve conter apenas números');
-            }
-        } catch (Exception $e) {
-            $this->add_error($e->getMessage());
+			if ( ! isset( $posted[ $this->id . '_cvc' ] ) || '' === $posted[ $this->id . '_cvc' ] ) {
+				throw new Exception( 'Por favor, informe o código de segurança do cartão' );
+			}
 
-            return false;
-        }
+			if ( preg_replace( '/[^0-9]/', '', $posted[ $this->id . '_cvc' ] ) != $posted[ $this->id . '_cvc' ] ) {
+				throw new Exception( 'O código de segurança deve conter apenas números' );
+			}
+		} catch ( Exception $e ) {
+			$this->add_error( $e->getMessage() );
 
-        return true;
-    }
+			return false;
+		}
 
-    public function add_error($message)
-    {
-        global $woocommerce;
+		return true;
+	}
 
-        $title = '<strong>' . esc_attr($this->title) . ':</strong> ';
+	public function add_error( $message ) {
+		global $woocommerce;
 
-        if (function_exists('wc_add_notice')) {
-            wc_add_notice($title . $message, 'error');
-        } else {
-            $woocommerce->add_error($title . $message);
-        }
-    }
+		$title = '<strong>' . esc_attr( $this->title ) . ':</strong> ';
 
-    protected function validate_installments($posted, $order_total)
-    {
-        if (!isset($posted['rede_credit_installments'])) {
-            $posted['rede_credit_installments'] = 1;
-        }
+		if ( function_exists( 'wc_add_notice' ) ) {
+			wc_add_notice( $title . $message, 'error' );
+		} else {
+			$woocommerce->add_error( $title . $message );
+		}
+	}
 
-        if ($posted['rede_credit_installments'] == 1) {
-            return true;
-        }
+	protected function validate_installments( $posted, $order_total ) {
+		if ( ! isset( $posted['rede_credit_installments'] ) ) {
+			$posted['rede_credit_installments'] = 1;
+		}
 
-        try {
-            if (!isset($posted['rede_credit_installments']) || '' === $posted['rede_credit_installments']) {
-                throw new Exception('Por favor, informe o número de parcelas');
-            }
+		if ( $posted['rede_credit_installments'] == 1 ) {
+			return true;
+		}
 
-            $installments = absint($posted['rede_credit_installments']);
-            $min_value = $this->get_option('min_parcels_value');
-            $max_parcels = $this->get_option('max_parcels_number');
+		try {
+			if ( ! isset( $posted['rede_credit_installments'] ) || '' === $posted['rede_credit_installments'] ) {
+				throw new Exception( 'Por favor, informe o número de parcelas' );
+			}
 
-            if ($installments > $max_parcels || (($min_value != 0) && (($order_total / $installments) < $min_value))) {
-                throw new Exception('Número inválido de parcelas');
-            }
-        } catch (Exception $e) {
-            $this->add_error($e->getMessage());
+			$installments = absint( $posted['rede_credit_installments'] );
+			$min_value    = $this->get_option( 'min_parcels_value' );
+			$max_parcels  = $this->get_option( 'max_parcels_number' );
 
-            return false;
-        }
+			if ( $installments > $max_parcels || ( ( $min_value != 0 ) && ( ( $order_total / $installments ) < $min_value ) ) ) {
+				throw new Exception( 'Número inválido de parcelas' );
+			}
+		} catch ( Exception $e ) {
+			$this->add_error( $e->getMessage() );
 
-        return true;
-    }
+			return false;
+		}
+
+		return true;
+	}
 }

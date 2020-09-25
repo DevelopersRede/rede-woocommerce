@@ -1,6 +1,6 @@
 <?php
-if (!defined('ABSPATH')) {
-    exit();
+if ( ! defined( 'ABSPATH' ) ) {
+	exit();
 }
 ?>
 
@@ -16,19 +16,19 @@ if (!defined('ABSPATH')) {
                                                              style="font-size: 1.5em; padding: 8px;"/>
     </p>
 
-    <?php if (is_array($installments) && count($installments) > 1) : ?>
+	<?php if ( is_array( $installments ) && count( $installments ) > 1 ) : ?>
         <p class="form-row form-row-wide">
-            <label for="installments">Parcelas <?= count($installments) ?><span
+            <label for="installments">Parcelas <?= count( $installments ) ?><span
                         class="required">*</span></label> <select id="installments"
                                                                   name="rede_credit_installments">
-                <?php
-                foreach ($installments as $installment) {
-                    printf('<option value="%d">%s</option>', $installment['num'], $installment['label']);
-                }
-                ?>
+				<?php
+				foreach ( $installments as $installment ) {
+					printf( '<option value="%d">%s</option>', $installment['num'], $installment['label'] );
+				}
+				?>
             </select>
         </p>
-    <?php endif; ?>
+	<?php endif; ?>
     <p class="form-row form-row-wide">
         <label for="rede-card-holder-name">Nome impresso no cartão<span
                     class="required">*</span></label> <input id="rede-card-holder-name"
