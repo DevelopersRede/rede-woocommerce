@@ -94,12 +94,14 @@ if ( ! class_exists( 'WC_Rede' ) ) :
 		private function includes() {
 			include_once dirname( __FILE__ ) . '/includes/class-wc-rede-abstract.php';
 			include_once dirname( __FILE__ ) . '/includes/class-wc-rede-credit.php';
+			include_once dirname( __FILE__ ) . '/includes/class-wc-rede-debit.php';
 			include_once dirname( __FILE__ ) . '/includes/class-wc-rede-api.php';
 			include_once dirname( __FILE__ ) . '/vendor/autoload.php';
 		}
 
 		public function add_gateway( $methods ) {
 			array_push( $methods, 'WC_Rede_Credit' );
+			array_push( $methods, 'WC_Rede_Debit' );
 
 			return $methods;
 		}
@@ -125,7 +127,19 @@ if ( ! class_exists( 'WC_Rede' ) ) :
 							'max_parcels_number' => $options['installments']
 						);
 
+						$debit_options = array(
+							'enabled' => $options['enabled'],
+							'title'   => 'Ativar',
+
+							'environment' => $options['environment'],
+							'token'       => $options['token'],
+							'pv'          => $options['pv'],
+
+							'soft_descriptor' => $options['soft_descriptor'],
+						);
+
 						update_option( 'woocommerce_rede_credit_settings', $credit_options );
+						update_option( 'woocommerce_rede_debit_settings', $credit_options );
 
 						delete_option( 'woocommerce_rede_settings' );
 					}
@@ -142,11 +156,8 @@ if ( ! class_exists( 'WC_Rede' ) ) :
 		public function plugin_action_links( $links ) {
 			$plugin_links = array();
 
-			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
-				$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=rede_credit' ) ) . '">Configurações</a>';
-			} else {
-				$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_rede_credit' ) ) . '">Configurações</a>';
-			}
+			$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=rede_credit' ) ) . '">Configurações de crédito</a>';
+			$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=rede_debit' ) ) . '">Configurações de débito</a>';
 
 			return array_merge( $plugin_links, $links );
 		}

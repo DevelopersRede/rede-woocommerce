@@ -1,11 +1,15 @@
 <?php
 
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Rede\Environment;
 use Rede\eRede;
 use Rede\Store;
+use Rede\ThreeDSecure;
 use Rede\Transaction;
+use Rede\Url;
+
 
 class WC_Rede_API {
 	protected $gateway;
@@ -16,6 +20,7 @@ class WC_Rede_API {
 	private $soft_descriptor;
 	private $partner_module;
 	private $partner_gateway;
+	private $debug = false;
 
 	public function __construct( $gateway = null ) {
 		$pv    = $gateway->pv;
@@ -35,6 +40,47 @@ class WC_Rede_API {
 		$this->store           = new Store( $pv, $token, $environment );
 	}
 
+	public function debug( $debug = true ) {
+		$this->debug = ! ! $debug;
+
+		return $this;
+	}
+
+	/**
+	 * @param $id
+	 * @param $amount
+	 * @param array $credit_card_data
+	 * @param $return_url
+	 *
+	 * @return Transaction|StdClass
+	 */
+	public function do_debit_request(
+		$id,
+		$amount,
+		$credit_card_data,
+		$return_url
+	) {
+		$transaction = ( new Transaction( $amount, $id ) )->debitCard(
+			$credit_card_data['card_number'],
+			$credit_card_data['card_cvv'],
+			$credit_card_data['card_expiration_month'],
+			$credit_card_data['card_expiration_year'],
+			$credit_card_data['card_holder']
+		);
+
+		$transaction->threeDSecure( ThreeDSecure::DECLINE_ON_FAILURE );
+		$transaction->addUrl( $return_url, Url::THREE_D_SECURE_SUCCESS );
+		$transaction->addUrl( $return_url, Url::THREE_D_SECURE_FAILURE );
+
+		if ( ! empty( $this->soft_descriptor ) ) {
+			$transaction->setSoftDescriptor( $this->soft_descriptor );
+		}
+
+		$transaction = ( new eRede( $this->store, $this->get_logger() ) )->create( $transaction );
+
+		return $transaction;
+	}
+
 	/**
 	 * @param $id
 	 * @param $amount
@@ -43,11 +89,11 @@ class WC_Rede_API {
 	 *
 	 * @return Transaction|StdClass
 	 */
-	public function do_transaction_request(
+	public function do_credit_request(
 		$id,
 		$amount,
 		$installments = 1,
-		$credit_card_data = array()
+		$credit_card_data = []
 	) {
 		$transaction = ( new Transaction( $amount, $id ) )->creditCard(
 			$credit_card_data['card_number'],
@@ -75,11 +121,17 @@ class WC_Rede_API {
 	}
 
 	protected function get_logger() {
-		$logger = new Logger( 'rede' );
-		$logger->pushHandler( new StreamHandler( WP_CONTENT_DIR . '/uploads/wc-logs/rede.log', Logger::DEBUG ) );
-		$logger->info( 'Log Rede' );
+		if ( $this->debug ) {
+			$handler = new StreamHandler( WP_CONTENT_DIR . '/uploads/wc-logs/' . wc_get_log_file_name( 'log' ), Logger::DEBUG );
+			$handler->setFormatter( new LineFormatter( "%datetime% %level_name% %message%\n" ) );
 
-		return $logger;
+			$logger = new Logger( 'rede' );
+			$logger->pushHandler( $handler );
+
+			return $logger;
+		}
+
+		return null;
 	}
 
 	public function do_transaction_consultation( $tid ) {
