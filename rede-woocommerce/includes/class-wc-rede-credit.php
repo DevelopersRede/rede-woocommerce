@@ -314,7 +314,7 @@ class WC_Rede_Credit extends WC_Rede_Abstract {
 					$this->get_logger()->error( sprintf( 'Erro no pagamento[%s]: %s', $e->getCode(), $e->getMessage() ) );
 				}
 
-				$this->add_error( sprintf( '[%s]: %s', $e->getCode(), $e->getMessage() ) );
+				$this->add_error( 'erro no pagamento.' );
 				$valid = false;
 			}
 		}
