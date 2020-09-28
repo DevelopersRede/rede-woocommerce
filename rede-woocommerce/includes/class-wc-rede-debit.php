@@ -132,7 +132,9 @@ class WC_Rede_Debit extends WC_Rede_Abstract {
 		$card_number = isset( $_POST['rede_debit_number'] ) ? sanitize_text_field( $_POST['rede_debit_number'] ) : '';
 		$valid       = true;
 
-		$this->get_logger()->info( "Iniciando pagamento por débito" );
+		if ( $this->debug ) {
+			$this->get_logger()->info( "Iniciando pagamento por débito" );
+		}
 
 		if ( $valid ) {
 			$valid = $this->validate_card_number( $card_number );
@@ -177,7 +179,9 @@ class WC_Rede_Debit extends WC_Rede_Abstract {
 				$this->process_order_status( $order, $transaction, '' );
 
 				if ( $valid ) {
-					$this->get_logger()->info( 'Redirecionando para autenticação' );
+					if ( $this->debug ) {
+						$this->get_logger()->info( 'Redirecionando para autenticação' );
+					}
 
 					return [
 						'result'   => 'success',
@@ -185,7 +189,9 @@ class WC_Rede_Debit extends WC_Rede_Abstract {
 					];
 				}
 			} catch ( Exception $e ) {
-				$this->get_logger()->error( sprintf( 'Erro no pagamento[%s]: %s', $e->getCode(), $e->getMessage() ) );
+				if ( $this->debug ) {
+					$this->get_logger()->error( sprintf( 'Erro no pagamento[%s]: %s', $e->getCode(), $e->getMessage() ) );
+				}
 
 				$this->add_error( $e->getMessage() );
 				$valid = false;

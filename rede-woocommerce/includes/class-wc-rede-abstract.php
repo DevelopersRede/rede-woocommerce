@@ -224,7 +224,9 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway {
 
 		$status_note = sprintf( 'Rede[%s]: %s', $returnCode, $returnMessage );
 
-		$this->get_logger()->info( $status_note );
+		if ( $this->debug ) {
+			$this->get_logger()->info( $status_note );
+		}
 
 		$order->add_order_note( trim( $status_note . ' ' . $note ) );
 
@@ -310,7 +312,9 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway {
 		}
 
 		if ( array_sum( str_split( $card_number_checksum ) ) % 10 !== 0 ) {
-			$this->get_logger()->debug( "Número do cartão é inválido" );
+			if ( $this->debug ) {
+				$this->get_logger()->debug( "Número do cartão é inválido" );
+			}
 
 			throw new Exception( 'Por favor, informe um número válido de cartão de crédito' );
 		}
@@ -334,45 +338,57 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway {
 
 		try {
 			if ( ! isset( $posted[ $this->id . '_number' ] ) || '' === $posted[ $this->id . '_number' ] ) {
-				$this->get_logger()->debug( "Número do cartão não informado" );
+				if ( $this->debug ) {
+					$this->get_logger()->debug( "Número do cartão não informado" );
+				}
 
 				throw new Exception( 'Por favor informe o número do cartão.' );
 			}
 
 			if ( ! isset( $posted[ $this->id . '_holder_name' ] ) || '' === $posted[ $this->id . '_holder_name' ] ) {
-				$this->get_logger()->debug( "Portador do cartão não informado" );
+				if ( $this->debug ) {
+					$this->get_logger()->debug( "Portador do cartão não informado" );
+				}
 
 				throw new Exception( 'Por favor informe o nome do titular do cartão' );
 			}
 
-			if ( preg_replace( '/[^a-zA-Z\s]/', '',
-					$posted[ $this->id . '_holder_name' ] ) != $posted[ $this->id . '_holder_name' ] ) {
-				$this->get_logger()->debug( "Portador do cartão inválido" );
+			if ( preg_replace( '/[^a-zA-Z\s]/', '', $posted[ $this->id . '_holder_name' ] ) != $posted[ $this->id . '_holder_name' ] ) {
+				if ( $this->debug ) {
+					$this->get_logger()->debug( "Portador do cartão inválido" );
+				}
 
 				throw new Exception( 'O nome do titular do cartão só pode conter letras' );
 			}
 
 			if ( ! isset( $posted[ $this->id . '_expiry' ] ) || '' === $posted[ $this->id . '_expiry' ] ) {
-				$this->get_logger()->debug( "Data de expiração do cartão não informada" );
+				if ( $this->debug ) {
+					$this->get_logger()->debug( "Data de expiração do cartão não informada" );
+				}
 
 				throw new Exception( 'Por favor, informe a data de expiração do cartão' );
 			}
 
-			if ( strtotime( preg_replace( '/(\d{2})\s*\/\s*(\d{4})/', '$2-$1-01',
-					$posted[ $this->id . '_expiry' ] ) ) < strtotime( date( 'Y-m' ) . '-01' ) ) {
-				$this->get_logger()->debug( "Data de expiração do cartão expirada" );
+			if ( strtotime( preg_replace( '/(\d{2})\s*\/\s*(\d{4})/', '$2-$1-01', $posted[ $this->id . '_expiry' ] ) ) < strtotime( date( 'Y-m' ) . '-01' ) ) {
+				if ( $this->debug ) {
+					$this->get_logger()->debug( "Data de expiração do cartão expirada" );
+				}
 
 				throw new Exception( 'A data de expiração do cartão deve ser futura' );
 			}
 
 			if ( ! isset( $posted[ $this->id . '_cvc' ] ) || '' === $posted[ $this->id . '_cvc' ] ) {
-				$this->get_logger()->debug( "CVV não informado" );
+				if ( $this->debug ) {
+					$this->get_logger()->debug( "CVV não informado" );
+				}
 
 				throw new Exception( 'Por favor, informe o código de segurança do cartão' );
 			}
 
 			if ( preg_replace( '/[^0-9]/', '', $posted[ $this->id . '_cvc' ] ) != $posted[ $this->id . '_cvc' ] ) {
-				$this->get_logger()->debug( "CVV inválido" );
+				if ( $this->debug ) {
+					$this->get_logger()->debug( "CVV inválido" );
+				}
 
 				throw new Exception( 'O código de segurança deve conter apenas números' );
 			}
@@ -408,7 +424,9 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway {
 
 		try {
 			if ( ! isset( $posted['rede_credit_installments'] ) || '' === $posted['rede_credit_installments'] ) {
-				$this->get_logger()->debug( "Número de parcelas não informada" );
+				if ( $this->debug ) {
+					$this->get_logger()->debug( "Número de parcelas não informada" );
+				}
 
 				throw new Exception( 'Por favor, informe o número de parcelas' );
 			}
@@ -418,7 +436,9 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway {
 			$max_parcels  = $this->get_option( 'max_parcels_number' );
 
 			if ( $installments > $max_parcels || ( ( $min_value != 0 ) && ( ( $order_total / $installments ) < $min_value ) ) ) {
-				$this->get_logger()->debug( "Número inválido de parcelas" );
+				if ( $this->debug ) {
+					$this->get_logger()->debug( "Número inválido de parcelas" );
+				}
 
 				throw new Exception( 'Número inválido de parcelas' );
 			}

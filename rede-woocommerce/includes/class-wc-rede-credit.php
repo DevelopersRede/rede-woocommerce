@@ -250,7 +250,9 @@ class WC_Rede_Credit extends WC_Rede_Abstract {
 		$card_number = isset( $_POST['rede_credit_number'] ) ? sanitize_text_field( $_POST['rede_credit_number'] ) : '';
 		$valid       = true;
 
-		$this->get_logger()->info( "Iniciando pagamento por crédito" );
+		if ($this->debug) {
+			$this->get_logger()->info( "Iniciando pagamento por crédito" );
+		}
 
 		if ( $valid ) {
 			$valid = $this->validate_card_fields( $_POST );
@@ -308,7 +310,9 @@ class WC_Rede_Credit extends WC_Rede_Abstract {
 
 				$this->process_order_status( $order, $transaction, '' );
 			} catch ( Exception $e ) {
-				$this->get_logger()->error( sprintf( 'Erro no pagamento[%s]: %s', $e->getCode(), $e->getMessage() ) );
+				if ($this->debug) {
+					$this->get_logger()->error( sprintf( 'Erro no pagamento[%s]: %s', $e->getCode(), $e->getMessage() ) );
+				}
 
 				$this->add_error( sprintf( '[%s]: %s', $e->getCode(), $e->getMessage() ) );
 				$valid = false;
