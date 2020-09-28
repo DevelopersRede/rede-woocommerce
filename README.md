@@ -4,11 +4,11 @@ Também é possível fazer o download da [última release](https://github.com/De
 
 # Módulo WooCommerce
 
-Esse módulo foi desenvolvido com suporte ao WooCommerce 3+.
+Esse módulo foi desenvolvido com suporte ao WooCommerce 4+ e WordPress 5+.
 
 ## Requisitos
 
-Os requisitos desse módulo são os mesmos requisitos do próprio WooCommerce, ou seja, se o WordPress suportar o WooCommerce 3+, ele suportará o módulo.
+Os requisitos desse módulo são os mesmos requisitos do próprio WooCommerce e do SDK PHP.
 
 # Instalação
 
