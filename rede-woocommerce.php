@@ -5,7 +5,8 @@
  * Description: Rede API integration for WooCommerce
  * Author:      Rede
  * Author URI:  https://www.userede.com.br/
- * Version:     2.0.0
+ * Version:     2.1.2
+ * Tested up to: 4.6.2
  * Text Domain: rede-woocommerce
  * Requires at least: 5.5
  * Requires PHP: 7.2
@@ -20,7 +21,7 @@ if ( ! class_exists( 'WC_Rede' ) ) :
 
 	class WC_Rede {
 
-		const VERSION = '2.0.1';
+		const VERSION = '2.1.2';
 
 		protected static $instance = null;
 
@@ -139,7 +140,7 @@ if ( ! class_exists( 'WC_Rede' ) ) :
 						);
 
 						update_option( 'woocommerce_rede_credit_settings', $credit_options );
-						update_option( 'woocommerce_rede_debit_settings', $credit_options );
+						update_option( 'woocommerce_rede_debit_settings', $debit_options );
 
 						delete_option( 'woocommerce_rede_settings' );
 					}

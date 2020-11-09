@@ -1,7 +1,7 @@
 {
   "name": "developersrede/woocommerce",
   "description": "Módulo de pagamento Rede para Woocommerce",
-  "version": "2.0.1",
+  "version": "2.1.2",
   "require": {
     "php": ">=7.2",
     "developersrede/erede-php": "^5.1",
