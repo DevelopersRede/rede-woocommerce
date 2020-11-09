@@ -20,7 +20,7 @@ if ( ! class_exists( 'WC_Rede' ) ) :
 
 	class WC_Rede {
 
-		const VERSION = '2.0.0';
+		const VERSION = '2.0.1';
 
 		protected static $instance = null;
 
@@ -179,13 +179,13 @@ if ( ! class_exists( 'WC_Rede' ) ) :
 	add_action( 'update_rede_orders', 'update_rede_orders' );
 
 	function update_rede_orders() {
-		$orders = new WP_Query( array(
-			'post_type'   => 'shop_order',
-			'post_status' => array( 'wc-on-hold', 'wc-processing' )
+		$orders = wc_get_orders( array(
+			'limit'          => -1,
+			'payment_method' => array( 'rede_debit', 'rede_credit' ),
+			'status'         => array( 'on-hold', 'processing')
 		) );
 
-
-		foreach ( $orders->posts as $order ) {
+		foreach ( $orders as $order ) {
 			$wc_order        = new WC_Order( $order->get_id() );
 			$wc_id           = $wc_order->get_id();
 			$payment_gateway = wc_get_payment_gateway_by_order( $wc_order );
