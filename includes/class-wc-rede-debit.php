@@ -6,17 +6,12 @@ class WC_Rede_Debit extends WC_Rede_Abstract {
 		$this->has_fields         = true;
 		$this->method_title       = 'Cartão de débito';
 		$this->method_description = 'Habilita e configura pagamentos com cartão de débito com a Rede';
-		$this->title              = $this->get_option( 'title' );
-		$this->description        = $this->get_option( 'description' );
-		$this->environment        = $this->get_option( 'environment' );
-		$this->pv                 = $this->get_option( 'pv' );
-		$this->token              = $this->get_option( 'token' );
-		$this->soft_descriptor    = $this->get_option( 'soft_descriptor' );
-		$this->debug              = $this->get_option( 'debug' ) === 'yes';
 		$this->supports           = [
 			'products',
 			'refunds'
 		];
+
+		parent::__construct();
 
 		$this->init_form_fields();
 		$this->init_settings();
@@ -160,10 +155,7 @@ class WC_Rede_Debit extends WC_Rede_Abstract {
 				$amount        = $order->get_total();
 				$transaction   = $this->api->debug( $this->debug )->do_debit_request( $order_id + time(), $amount, $card_data, $this->get_return_url( $order ) );
 				$authorization = $transaction->getAuthorization();
-
-				if ( ! is_null( $authorization ) ) {
-					update_post_meta( $order_id, '_wc_rede_transaction_authorization_status', $authorization->getStatus() );
-				}
+				$brand         = $transaction->getBrand();
 
 				update_post_meta( $order_id, '_wc_rede_transaction_bin', $transaction->getCardBin() );
 				update_post_meta( $order_id, '_wc_rede_transaction_last4', $transaction->getLast4() );
@@ -172,6 +164,14 @@ class WC_Rede_Debit extends WC_Rede_Abstract {
 
 				if ( ! is_null( $authorization ) ) {
 					update_post_meta( $order_id, '_wc_rede_transaction_authorization_status', $authorization->getStatus() );
+				}
+
+				update_post_meta( $order_id, '_wc_rede_brand_tid', $transaction->getBrandTid() );
+
+				if ( ! is_null( $brand ) ) {
+					update_post_meta( $order_id, '_wc_rede_brand_name', $brand->getName() );
+					update_post_meta( $order_id, '_wc_rede_brand_return_code', $brand->getReturnCode() );
+					update_post_meta( $order_id, '_wc_rede_brand_return_message', $brand->getReturnMessage() );
 				}
 
 				update_post_meta( $order_id, '_wc_rede_transaction_environment', $this->environment );
