@@ -1,10 +1,10 @@
 {
   "name": "developersrede/woocommerce",
   "description": "Módulo de pagamento Rede para Woocommerce",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "require": {
     "php": ">=7.2",
-    "developersrede/erede-php": "^5.0",
+    "developersrede/erede-php": "^5.1",
     "monolog/monolog": ">=2.1.1",
     "ext-json": "*",
     "ext-curl": "*"
