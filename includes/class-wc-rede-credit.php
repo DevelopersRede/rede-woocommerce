@@ -7,25 +7,19 @@ class WC_Rede_Credit extends WC_Rede_Abstract {
 
 	public function __construct() {
 		$this->id                 = 'rede_credit';
-		$this->has_fields         = true;
 		$this->method_title       = 'Cartão de crédito';
 		$this->method_description = 'Habilita e configura pagamentos com cartão de crédito com a Rede';
-		$this->title              = $this->get_option( 'title' );
-		$this->description        = $this->get_option( 'description' );
-		$this->environment        = $this->get_option( 'environment' );
-		$this->pv                 = $this->get_option( 'pv' );
-		$this->token              = $this->get_option( 'token' );
-		$this->soft_descriptor    = $this->get_option( 'soft_descriptor' );
 		$this->auto_capture       = $this->get_option( 'auto_capture' );
 		$this->max_parcels_number = $this->get_option( 'max_parcels_number' );
 		$this->min_parcels_value  = $this->get_option( 'min_parcels_value' );
 		$this->partner_module     = $this->get_option( 'module' );
 		$this->partner_gateway    = $this->get_option( 'gateway' );
-		$this->debug              = $this->get_option( 'debug' ) === 'yes';
 		$this->supports           = [
 			'products',
 			'refunds'
 		];
+
+		parent::__construct();
 
 		$this->init_form_fields();
 		$this->init_settings();
@@ -207,6 +201,10 @@ class WC_Rede_Credit extends WC_Rede_Abstract {
 		$max_parcels  = $this->max_parcels_number;
 
 		for ( $i = 1; $i <= $max_parcels; ++ $i ) {
+			if ($order_total / $i < $min_value) {
+				break;
+			}
+
 			$label = sprintf( '%dx de R$ %.02f', $i, $order_total / $i );
 
 			if ( $i == 1 ) {
@@ -217,10 +215,6 @@ class WC_Rede_Credit extends WC_Rede_Abstract {
 				'num'   => $i,
 				'label' => $label
 			];
-
-			if ( ( $order_total / $i ) < $min_value ) {
-				break;
-			}
 		}
 
 		if ( count( $installments ) == 0 ) {
@@ -295,13 +289,18 @@ class WC_Rede_Credit extends WC_Rede_Abstract {
 				update_post_meta( $order_id, '_wc_rede_transaction_authorization_code', $transaction->getAuthorizationCode() );
 
 				$authorization = $transaction->getAuthorization();
+				$brand         = $transaction->getBrand();
 
 				if ( ! is_null( $authorization ) ) {
 					update_post_meta( $order_id, '_wc_rede_transaction_authorization_status', $authorization->getStatus() );
 				}
 
-				if ( ! is_null( $authorization ) ) {
-					update_post_meta( $order_id, '_wc_rede_transaction_authorization_status', $authorization->getStatus() );
+				update_post_meta( $order_id, '_wc_rede_brand_tid', $transaction->getBrandTid() );
+
+				if ( ! is_null( $brand ) ) {
+					update_post_meta( $order_id, '_wc_rede_brand_name', $brand->getName() );
+					update_post_meta( $order_id, '_wc_rede_brand_return_code', $brand->getReturnCode() );
+					update_post_meta( $order_id, '_wc_rede_brand_return_message', $brand->getReturnMessage() );
 				}
 
 				update_post_meta( $order_id, '_wc_rede_transaction_holder', $transaction->getCardHolderName() );
