@@ -10,6 +10,25 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway {
 	public $api;
 	public $debug = false;
 
+	public $environment;
+	public $pv;
+	public $token;
+	public $soft_descriptor;
+	public $partner_module;
+	public $partner_gateway;
+	public $auto_capture = false;
+
+	public function __construct() {
+		$this->title      = $this->get_option( 'title' );
+		$this->has_fields = true;
+
+		$this->environment     = $this->get_option( 'environment' );
+		$this->pv              = $this->get_option( 'pv' );
+		$this->token           = $this->get_option( 'token' );
+		$this->soft_descriptor = $this->get_option( 'soft_descriptor' );
+		$this->debug           = $this->get_option( 'debug' ) === 'yes';
+	}
+
 	public function get_valid_value( $value ) {
 		return preg_replace( '/[^\d\.]+/', '', str_replace( ',', '.', $value ) );
 	}
@@ -53,7 +72,8 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway {
 				$items['payment_return']['value'] .= sprintf( '<strong>Parcelas</strong>: %s<br/>', $installments );
 			}
 
-			$items['payment_return']['value'] .= sprintf( '<strong>Código de autorização</strong>: %s', $authorization_code );
+			$items['payment_return']['value'] .= sprintf( '<strong>Código de autorização</strong>: %s',
+				$authorization_code );
 
 			$items[] = $last;
 		}
@@ -132,6 +152,34 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway {
                 <td>Mensagem de Retorno</td>
                 <td><?= $order->get_meta( '_wc_rede_transaction_return_message' ); ?></td>
             </tr>
+
+			<?php if ( ! empty( $order->get_meta( '_wc_rede_brand_name' ) ) ) { ?>
+                <tr>
+                    <td>Nome da bandeira</td>
+                    <td><?= $order->get_meta( '_wc_rede_brand_name' ); ?></td>
+                </tr>
+			<?php } ?>
+
+			<?php if ( ! empty( $order->get_meta( '_wc_rede_brand_return_code' ) ) ) { ?>
+                <tr>
+                    <td>Código de retorno da bandeira</td>
+                    <td><?= $order->get_meta( '_wc_rede_brand_return_code' ); ?></td>
+                </tr>
+			<?php } ?>
+
+			<?php if ( ! empty( $order->get_meta( '_wc_rede_brand_return_message' ) ) ) { ?>
+                <tr>
+                    <td>Mensagem de retorno da bandeira</td>
+                    <td><?= $order->get_meta( '_wc_rede_brand_return_message' ); ?></td>
+                </tr>
+			<?php } ?>
+
+			<?php if ( ! empty( $order->get_meta( '_wc_rede_brand_tid' ) ) ) { ?>
+                <tr>
+                    <td>Tid da bandeira</td>
+                    <td><?= $order->get_meta( '_wc_rede_brand_tid' ) ?></td>
+                </tr>
+			<?php } ?>
 
 			<?php if ( ! empty( $order->get_meta( '_wc_rede_transaction_id' ) ) ) { ?>
                 <tr>
@@ -237,7 +285,7 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway {
 				$order->update_status( 'on-hold' );
 				wc_reduce_stock_levels( $order->get_id() );
 			}
-		} else if ( $returnCode == '220' ) {
+		} elseif ( $returnCode == '220' ) {
 			$order->update_status( 'pending', 'Redirecionado para autenticação' );
 		} else {
 			$order->update_status( 'failed', $status_note );
@@ -260,23 +308,28 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway {
 					update_post_meta( $order_id, '_mpi_return', true );
 					update_post_meta( $order_id, '_transaction_id', $_POST['tid'] );
 					update_post_meta( $order_id, '_wc_rede_transaction_return_code', $authorization->getReturnCode() );
-					update_post_meta( $order_id, '_wc_rede_transaction_return_message', $authorization->getReturnMessage() );
+					update_post_meta( $order_id, '_wc_rede_transaction_return_message',
+						$authorization->getReturnMessage() );
 					update_post_meta( $order_id, '_wc_rede_transaction_id', $_POST['tid'] );
 					update_post_meta( $order_id, '_wc_rede_transaction_nsu', $authorization->getNsu() );
-					update_post_meta( $order_id, '_wc_rede_transaction_authorization_code', $authorization->getAuthorizationCode() );
+					update_post_meta( $order_id, '_wc_rede_transaction_authorization_code',
+						$authorization->getAuthorizationCode() );
 
 					$authorization = $transaction->getAuthorization();
 
 					if ( ! is_null( $authorization ) ) {
-						update_post_meta( $order_id, '_wc_rede_transaction_authorization_status', $authorization->getStatus() );
+						update_post_meta( $order_id, '_wc_rede_transaction_authorization_status',
+							$authorization->getStatus() );
 					}
 
 					if ( ! is_null( $authorization ) ) {
-						update_post_meta( $order_id, '_wc_rede_transaction_authorization_status', $authorization->getStatus() );
+						update_post_meta( $order_id, '_wc_rede_transaction_authorization_status',
+							$authorization->getStatus() );
 					}
 
 					update_post_meta( $order_id, '_wc_rede_transaction_holder', $transaction->getCardHolderName() );
-					update_post_meta( $order_id, '_wc_rede_transaction_expiration', sprintf( '%02d/%04d', $expiration[0], $expiration[1] ) );
+					update_post_meta( $order_id, '_wc_rede_transaction_expiration',
+						sprintf( '%02d/%04d', $expiration[0], $expiration[1] ) );
 					update_post_meta( $order_id, '_wc_rede_transaction_environment', $this->environment );
 
 					$order->payment_complete();
@@ -353,7 +406,8 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway {
 				throw new Exception( 'Por favor informe o nome do titular do cartão' );
 			}
 
-			if ( preg_replace( '/[^a-zA-Z\s]/', '', $posted[ $this->id . '_holder_name' ] ) != $posted[ $this->id . '_holder_name' ] ) {
+			if ( preg_replace( '/[^a-zA-Z\s]/', '',
+					$posted[ $this->id . '_holder_name' ] ) != $posted[ $this->id . '_holder_name' ] ) {
 				if ( $this->debug ) {
 					$this->get_logger()->debug( "Portador do cartão inválido" );
 				}
@@ -369,7 +423,8 @@ abstract class WC_Rede_Abstract extends WC_Payment_Gateway {
 				throw new Exception( 'Por favor, informe a data de expiração do cartão' );
 			}
 
-			if ( strtotime( preg_replace( '/(\d{2})\s*\/\s*(\d{4})/', '$2-$1-01', $posted[ $this->id . '_expiry' ] ) ) < strtotime( date( 'Y-m' ) . '-01' ) ) {
+			if ( strtotime( preg_replace( '/(\d{2})\s*\/\s*(\d{4})/', '$2-$1-01',
+					$posted[ $this->id . '_expiry' ] ) ) < strtotime( date( 'Y-m' ) . '-01' ) ) {
 				if ( $this->debug ) {
 					$this->get_logger()->debug( "Data de expiração do cartão expirada" );
 				}
