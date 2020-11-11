@@ -6,10 +6,12 @@
  * Author:      Rede
  * Author URI:  https://www.userede.com.br/
  * Version:     2.1.2
- * Tested up to: 4.6.2
- * Text Domain: rede-woocommerce
  * Requires at least: 5.5
+ * Tested up to: 5.5.3
  * Requires PHP: 7.2
+ * WC requires at least: 3.0.0
+ * WC tested up to: 4.7.0
+ * Text Domain: rede-woocommerce
  *
  * @package WC_Rede
  */
